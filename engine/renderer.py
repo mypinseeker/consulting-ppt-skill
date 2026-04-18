@@ -39,6 +39,43 @@ class PlanRenderer:
             font_family=brand_cfg.get("font_family", "Arial"),
         )
 
+    @staticmethod
+    def _infer_number_format(chart: dict) -> str:
+        """从 y_axis_title 和数据自动推断数据标签格式"""
+        y_title = (chart.get("y_axis_title") or "").lower()
+
+        # 百分比
+        if any(k in y_title for k in ["%", "率", "ratio", "percent", "share", "penetration", "增长"]):
+            return '#,##0"%"'
+        # 评分/指数
+        if any(k in y_title for k in ["评分", "score", "index", "rating", "分"]):
+            return '#,##0.0'
+        # 欧元
+        if "€" in y_title or "eur" in y_title:
+            return '€#,##0'
+        # 人民币
+        if any(k in y_title for k in ["¥", "rmb", "cny", "元"]):
+            return '¥#,##0'
+        # 美元（默认货币）
+        if any(k in y_title for k in ["$", "usd", "cost", "revenue", "price", "费", "价"]):
+            return '$#,##0'
+        # 数量
+        if any(k in y_title for k in ["count", "number", "用户", "户", "人", "万", "个"]):
+            return '#,##0'
+
+        # 检查数据大小推断
+        all_values = []
+        for s in chart.get("series", []):
+            all_values.extend(s.get("values", []))
+        if all_values:
+            max_val = max(abs(v) for v in all_values if isinstance(v, (int, float)))
+            if max_val > 1000:
+                return '#,##0'
+            elif max_val > 100:
+                return '#,##0'
+
+        return '#,##0'  # 安全默认：纯数字，不加货币符号
+
     def validate(self) -> bool:
         """渲染前校验 Planning JSON"""
         errors = validate_plan(str(self.plan_path))
@@ -136,7 +173,7 @@ class PlanRenderer:
             y_axis_title=chart.get("y_axis_title"),
             insight=data.get("insight"),
             source=data.get("source"),
-            number_format=chart.get("number_format", '$#,##0.0"M"'),
+            number_format=chart.get("number_format", self._infer_number_format(chart)),
         )
 
     def _render_comparison(self, data: dict):
