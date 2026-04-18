@@ -1,0 +1,93 @@
+{
+  "top_conclusion": "Starlink在拉美威胁极大，需6大防御策略",
+  "narrative_flow": "conclusion_first",
+  "arguments": [
+    {
+      "title": "FTTH覆盖缺口决定威胁：渗透率<10%市场增长超100%",
+      "slides": [
+        {
+          "template": "data_story",
+          "focus": "增长",
+          "chart_data": {
+            "type": "bar",
+            "data_type": "percentage",
+            "categories": [
+              "玻利维亚",
+              "危地马拉",
+              "法国"
+            ],
+            "series": [
+              {
+                "name": "YoY增长",
+                "values": [
+                  1144,
+                  125,
+                  20
+                ]
+              }
+            ],
+            "y_axis_title": "增长率(%)"
+          },
+          "insight": "覆盖空白=蓝海"
+        }
+      ],
+      "evidence": [
+        "StarlinkInsider 2025"
+      ]
+    },
+    {
+      "title": "Starlink Lite在3国达到平价",
+      "slides": [
+        {
+          "template": "data_story",
+          "focus": "价格",
+          "chart_data": {
+            "type": "bar",
+            "data_type": "currency_usd",
+            "categories": [
+              "萨尔瓦多",
+              "爱尔兰",
+              "智利"
+            ],
+            "series": [
+              {
+                "name": "Lite",
+                "values": [
+                  35,
+                  32,
+                  36
+                ]
+              },
+              {
+                "name": "运营商",
+                "values": [
+                  35,
+                  33,
+                  12
+                ]
+              }
+            ],
+            "y_axis_title": "月费(USD)"
+          },
+          "insight": "萨尔瓦多完全平价"
+        }
+      ],
+      "evidence": [
+        "108条套餐"
+      ]
+    }
+  ],
+  "density_bias": "balanced",
+  "density_targets": {
+    "cover": "low",
+    "section_divider": "low",
+    "closing": "low",
+    "executive_summary": "medium",
+    "recommendation": "medium",
+    "data_story": "high",
+    "comparison": "high",
+    "framework": "high",
+    "table": "high",
+    "appendix": "high"
+  }
+}

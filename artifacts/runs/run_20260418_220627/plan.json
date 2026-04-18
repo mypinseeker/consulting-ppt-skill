@@ -1,0 +1,136 @@
+{
+  "metadata": {
+    "title": "Starlink 威胁与防御",
+    "date": "April 2026",
+    "brand": {
+      "primary": "#CF0A2C",
+      "secondary": "#333333",
+      "accent": "#FFD100"
+    },
+    "total_slides": 6,
+    "generated_by": "consulting-ppt-skill v3.0"
+  },
+  "slides": [
+    {
+      "slide_number": 1,
+      "template": "cover",
+      "title": "Starlink 威胁与防御",
+      "subtitle": "Starlink在拉美威胁极大，需6大防御策略",
+      "date": "April 2026"
+    },
+    {
+      "slide_number": 2,
+      "template": "executive_summary",
+      "action_title": "Starlink在拉美威胁极大，需6大防御策略",
+      "subtitle": "Key findings summary",
+      "kpis": [
+        {
+          "value": "+1144%",
+          "label": "最高增长",
+          "detail": ""
+        },
+        {
+          "value": "3国",
+          "label": "已达平价",
+          "detail": ""
+        }
+      ],
+      "density_label": "medium"
+    },
+    {
+      "slide_number": 3,
+      "template": "data_story",
+      "action_title": "FTTH覆盖缺口决定威胁：渗透率<10%市场增长超100%",
+      "subtitle": "增长",
+      "density_label": "medium",
+      "chart": {
+        "type": "bar",
+        "data_type": "percentage",
+        "categories": [
+          "玻利维亚",
+          "危地马拉",
+          "法国"
+        ],
+        "series": [
+          {
+            "name": "YoY增长",
+            "values": [
+              1144,
+              125,
+              20
+            ]
+          }
+        ],
+        "y_axis_title": "增长率(%)"
+      },
+      "insight": "覆盖空白=蓝海",
+      "source": "StarlinkInsider 2025"
+    },
+    {
+      "slide_number": 4,
+      "template": "data_story",
+      "action_title": "Starlink Lite在3国达到平价",
+      "subtitle": "价格",
+      "density_label": "medium",
+      "chart": {
+        "type": "bar",
+        "data_type": "currency_usd",
+        "categories": [
+          "萨尔瓦多",
+          "爱尔兰",
+          "智利"
+        ],
+        "series": [
+          {
+            "name": "Lite",
+            "values": [
+              35,
+              32,
+              36
+            ]
+          },
+          {
+            "name": "运营商",
+            "values": [
+              35,
+              33,
+              12
+            ]
+          }
+        ],
+        "y_axis_title": "月费(USD)"
+      },
+      "insight": "萨尔瓦多完全平价",
+      "source": "108条套餐"
+    },
+    {
+      "slide_number": 5,
+      "template": "recommendation",
+      "action_title": "3 recommended actions to move forward",
+      "recommendations": [
+        {
+          "number": "1",
+          "title": "加速FTTH",
+          "detail": "加速FTTH"
+        },
+        {
+          "number": "2",
+          "title": "不涨价模式",
+          "detail": "不涨价模式"
+        },
+        {
+          "number": "3",
+          "title": "农村套餐",
+          "detail": "农村套餐"
+        }
+      ],
+      "density_label": "medium"
+    },
+    {
+      "slide_number": 6,
+      "template": "closing",
+      "title": "Thank You",
+      "subtitle": "运营商高管 — April 2026"
+    }
+  ]
+}

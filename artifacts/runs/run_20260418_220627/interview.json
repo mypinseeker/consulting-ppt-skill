@@ -1,0 +1,104 @@
+{
+  "audience": "运营商高管",
+  "core_question": "Starlink 威胁与防御",
+  "hypothesis": "Starlink在拉美威胁极大，需6大防御策略",
+  "density_bias": "balanced",
+  "key_arguments": [
+    {
+      "title": "FTTH覆盖缺口决定威胁：渗透率<10%市场增长超100%",
+      "slides": [
+        {
+          "template": "data_story",
+          "focus": "增长",
+          "chart_data": {
+            "type": "bar",
+            "data_type": "percentage",
+            "categories": [
+              "玻利维亚",
+              "危地马拉",
+              "法国"
+            ],
+            "series": [
+              {
+                "name": "YoY增长",
+                "values": [
+                  1144,
+                  125,
+                  20
+                ]
+              }
+            ],
+            "y_axis_title": "增长率(%)"
+          },
+          "insight": "覆盖空白=蓝海"
+        }
+      ],
+      "evidence": [
+        "StarlinkInsider 2025"
+      ]
+    },
+    {
+      "title": "Starlink Lite在3国达到平价",
+      "slides": [
+        {
+          "template": "data_story",
+          "focus": "价格",
+          "chart_data": {
+            "type": "bar",
+            "data_type": "currency_usd",
+            "categories": [
+              "萨尔瓦多",
+              "爱尔兰",
+              "智利"
+            ],
+            "series": [
+              {
+                "name": "Lite",
+                "values": [
+                  35,
+                  32,
+                  36
+                ]
+              },
+              {
+                "name": "运营商",
+                "values": [
+                  35,
+                  33,
+                  12
+                ]
+              }
+            ],
+            "y_axis_title": "月费(USD)"
+          },
+          "insight": "萨尔瓦多完全平价"
+        }
+      ],
+      "evidence": [
+        "108条套餐"
+      ]
+    }
+  ],
+  "kpi_data": [
+    {
+      "value": "+1144%",
+      "label": "最高增长",
+      "detail": ""
+    },
+    {
+      "value": "3国",
+      "label": "已达平价",
+      "detail": ""
+    }
+  ],
+  "actions": [
+    "加速FTTH",
+    "不涨价模式",
+    "农村套餐"
+  ],
+  "brand": {
+    "primary": "#CF0A2C",
+    "secondary": "#333333",
+    "accent": "#FFD100"
+  }
+}
