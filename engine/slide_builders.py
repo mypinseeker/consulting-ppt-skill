@@ -354,13 +354,19 @@ class DeckBuilder:
         slide = self._blank()
         self._action_title(slide, title, subtitle)
 
-        colors = [self.brand.positive, self.brand.secondary, self.brand.primary]
+        colors = [self.brand.positive, self.brand.secondary, self.brand.primary,
+                  self.brand.shade_50, self.brand.shade_70]
         n = len(recommendations)
+        # 超过 3 个时用双行布局
+        cols = min(n, 3) if n <= 3 else min(n, 5)
 
         for i, (num, rec_title, desc) in enumerate(recommendations):
-            x = Inches(0.8 + i * (11.5 / n))
-            card_w = Inches(11.5 / n - 0.3)
-            y = Inches(1.5)
+            row = 0 if i < 3 else 1
+            col = i if i < 3 else i - 3
+            cols_in_row = min(3, n) if row == 0 else n - 3
+            x = Inches(0.8 + col * (11.5 / cols_in_row))
+            card_w = Inches(11.5 / cols_in_row - 0.3)
+            y = Inches(1.5 + row * 2.8)
 
             # Number circle
             circle = slide.shapes.add_shape(MSO_SHAPE.OVAL, x, y, Inches(0.5), Inches(0.5))

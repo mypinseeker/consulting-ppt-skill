@@ -1,0 +1,46 @@
+{
+  "audience": "运营商高管 + 战略部",
+  "core_question": "Starlink 对运营商宽带业务的威胁有多大？如何防御？",
+  "hypothesis": "Starlink 在 FTTH 覆盖薄弱的拉美市场威胁极大（3 国已达平价），欧洲因不涨价模式威胁可控，运营商需 6 大防御策略",
+  "key_arguments": [
+    "覆盖缺口决定威胁等级：FTTH<10% 的拉美市场 Starlink 用户增长超 100%，FTTH>60% 的欧洲市场增长仅 4-20%",
+    "Starlink Lite 已在 3 个市场达到平价或更便宜（萨尔瓦多 $35 = Tigo $35，爱尔兰 €29 < eir Y2 €76，乌拉圭 vs Antel）",
+    "5 种定价模式决定防御能力：不涨价模式（Iliad/SFR）防御最强，Y1/Y2 跳涨模式（eir/Orange）防御最弱",
+    "14 国 108 套餐全运营商对比揭示：运营商自己的涨价策略反而在帮 Starlink 获客",
+    "6 大防御战略：加速 FTTH 覆盖、推出 FWA 5G 反击、学习固定价格模式、捆绑增值服务、农村专属套餐、政府补贴合作"
+  ],
+  "data_sources": [
+    {
+      "name": "14 国 108 条运营商套餐数据",
+      "confidence": "A"
+    },
+    {
+      "name": "StarlinkInsider 价格历史",
+      "confidence": "A"
+    },
+    {
+      "name": "FTTH Council Europe 2025",
+      "confidence": "A"
+    },
+    {
+      "name": "Omdia FWA 未连接家庭 2025",
+      "confidence": "A"
+    },
+    {
+      "name": "24 张运营商官网截图",
+      "confidence": "A"
+    }
+  ],
+  "actions": [
+    "加速 FTTH/FWA 覆盖：优先填补 FTTH<10% 的市场空白（危地马拉/萨尔瓦多/巴拉圭）",
+    "学习 Iliad 不涨价模式：锁定价格消除 Starlink 的价格叙事优势",
+    "推出农村专属低价套餐：$15-20 档位抢占 Starlink 目标用户",
+    "5G FWA 快速部署：拉美仅 56 万 FWA 用户，防御武器尚未发力",
+    "与政府合作数字包容计划：争取农村覆盖补贴"
+  ],
+  "brand": {
+    "primary": "#CF0A2C",
+    "secondary": "#000000",
+    "accent": "#FFFFFF"
+  }
+}

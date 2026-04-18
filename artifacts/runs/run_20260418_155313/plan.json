@@ -1,0 +1,225 @@
+{
+  "metadata": {
+    "title": "Starlink 对运营商宽带业务的威胁有多大？如何防御？",
+    "date": "April 2026",
+    "brand": {
+      "primary": "#CF0A2C",
+      "secondary": "#000000",
+      "accent": "#FFFFFF"
+    },
+    "total_slides": 9,
+    "generated_by": "consulting-ppt-skill v2.0"
+  },
+  "slides": [
+    {
+      "slide_number": 1,
+      "template": "cover",
+      "title": "Starlink 对运营商宽带业务的威胁有多大？如何防御？",
+      "subtitle": "Starlink 在 FTTH 覆盖薄弱的拉美市场威胁极大（3 国已达平价），欧洲因不涨价模式威胁可控，运营商需 6 大防御策略",
+      "date": "April 2026"
+    },
+    {
+      "slide_number": 2,
+      "template": "executive_summary",
+      "action_title": "Starlink 在 FTTH 覆盖薄弱的拉美市场威胁极大（3 国已达平价），欧洲因不涨价模式威胁可控，运营商需 6 大防御策略",
+      "subtitle": "Key findings summary",
+      "kpis": [
+        {
+          "value": "#1",
+          "label": "覆盖缺口决定威胁等级：FTTH<10% 的拉美市场 Starlink 用户增长超",
+          "detail": ""
+        },
+        {
+          "value": "#2",
+          "label": "Starlink Lite 已在 3 个市场达到平价或更便宜（萨尔瓦多 $35 ",
+          "detail": ""
+        },
+        {
+          "value": "#3",
+          "label": "5 种定价模式决定防御能力：不涨价模式（Iliad/SFR）防御最强，Y1/Y2",
+          "detail": ""
+        },
+        {
+          "value": "#4",
+          "label": "14 国 108 套餐全运营商对比揭示：运营商自己的涨价策略反而在帮 Starl",
+          "detail": ""
+        }
+      ],
+      "density_label": "medium"
+    },
+    {
+      "slide_number": 3,
+      "template": "data_story",
+      "action_title": "覆盖缺口决定威胁等级：FTTH<10% 的拉美市场 Starlink 用户增长超 100%，FTTH>60% 的欧洲市场增长仅 4-20%",
+      "subtitle": "覆盖缺口决定威胁等级：FTTH<10% 的拉美市场 Starlink 用户增长超 100%，FTTH>60% 的欧洲市场增长仅 4-20%",
+      "density_label": "medium",
+      "chart": {
+        "type": "bar",
+        "categories": [
+          "Category A",
+          "Category B",
+          "Category C"
+        ],
+        "series": [
+          {
+            "name": "Value",
+            "values": [
+              100,
+              150,
+              120
+            ]
+          }
+        ],
+        "y_axis_title": "Value",
+        "show_data_labels": true
+      },
+      "insight": "Key insight from: 覆盖缺口决定威胁等级：FTTH<10% 的拉美市场 Starlink 用户增长超 100%，FTTH>60% 的欧洲市场增长仅 4-20%",
+      "source": "Data source to be confirmed"
+    },
+    {
+      "slide_number": 4,
+      "template": "data_story",
+      "action_title": "Starlink Lite 已在 3 个市场达到平价或更便宜（萨尔瓦多 $35 = Tigo $35，爱尔兰 €29 < eir Y2 €76，乌拉圭 vs Antel）",
+      "subtitle": "Starlink Lite 已在 3 个市场达到平价或更便宜（萨尔瓦多 $35 = Tigo $35，爱尔兰 €29 < eir Y2 €76，乌拉圭 vs Antel）",
+      "density_label": "medium",
+      "chart": {
+        "type": "bar",
+        "categories": [
+          "Category A",
+          "Category B",
+          "Category C"
+        ],
+        "series": [
+          {
+            "name": "Value",
+            "values": [
+              100,
+              150,
+              120
+            ]
+          }
+        ],
+        "y_axis_title": "Value",
+        "show_data_labels": true
+      },
+      "insight": "Key insight from: Starlink Lite 已在 3 个市场达到平价或更便宜（萨尔瓦多 $35 = Tigo $35，爱尔兰 €29 < eir Y2 €76，乌拉圭 vs Antel）",
+      "source": "Data source to be confirmed"
+    },
+    {
+      "slide_number": 5,
+      "template": "data_story",
+      "action_title": "5 种定价模式决定防御能力：不涨价模式（Iliad/SFR）防御最强，Y1/Y2 跳涨模式（eir/Orange）防御最弱",
+      "subtitle": "5 种定价模式决定防御能力：不涨价模式（Iliad/SFR）防御最强，Y1/Y2 跳涨模式（eir/Orange）防御最弱",
+      "density_label": "medium",
+      "chart": {
+        "type": "bar",
+        "categories": [
+          "Category A",
+          "Category B",
+          "Category C"
+        ],
+        "series": [
+          {
+            "name": "Value",
+            "values": [
+              100,
+              150,
+              120
+            ]
+          }
+        ],
+        "y_axis_title": "Value",
+        "show_data_labels": true
+      },
+      "insight": "Key insight from: 5 种定价模式决定防御能力：不涨价模式（Iliad/SFR）防御最强，Y1/Y2 跳涨模式（eir/Orange）防御最弱",
+      "source": "Data source to be confirmed"
+    },
+    {
+      "slide_number": 6,
+      "template": "data_story",
+      "action_title": "14 国 108 套餐全运营商对比揭示：运营商自己的涨价策略反而在帮 Starlink 获客",
+      "subtitle": "14 国 108 套餐全运营商对比揭示：运营商自己的涨价策略反而在帮 Starlink 获客",
+      "density_label": "medium",
+      "chart": {
+        "type": "bar",
+        "categories": [
+          "Category A",
+          "Category B",
+          "Category C"
+        ],
+        "series": [
+          {
+            "name": "Value",
+            "values": [
+              100,
+              150,
+              120
+            ]
+          }
+        ],
+        "y_axis_title": "Value",
+        "show_data_labels": true
+      },
+      "insight": "Key insight from: 14 国 108 套餐全运营商对比揭示：运营商自己的涨价策略反而在帮 Starlink 获客",
+      "source": "Data source to be confirmed"
+    },
+    {
+      "slide_number": 7,
+      "template": "data_story",
+      "action_title": "6 大防御战略：加速 FTTH 覆盖、推出 FWA 5G 反击、学习固定价格模式、捆绑增值服务、农村专属套餐、政府补贴合作",
+      "subtitle": "6 大防御战略：加速 FTTH 覆盖、推出 FWA 5G 反击、学习固定价格模式、捆绑增值服务、农村专属套餐、政府补贴合作",
+      "density_label": "medium",
+      "chart": {
+        "type": "bar",
+        "categories": [
+          "Category A",
+          "Category B",
+          "Category C"
+        ],
+        "series": [
+          {
+            "name": "Value",
+            "values": [
+              100,
+              150,
+              120
+            ]
+          }
+        ],
+        "y_axis_title": "Value",
+        "show_data_labels": true
+      },
+      "insight": "Key insight from: 6 大防御战略：加速 FTTH 覆盖、推出 FWA 5G 反击、学习固定价格模式、捆绑增值服务、农村专属套餐、政府补贴合作",
+      "source": "Data source to be confirmed"
+    },
+    {
+      "slide_number": 8,
+      "template": "recommendation",
+      "action_title": "5 recommended actions to move forward",
+      "recommendations": [
+        {
+          "number": "1",
+          "title": "加速 FTTH/FWA 覆盖：优先填补 FTTH<10% 的",
+          "detail": "加速 FTTH/FWA 覆盖：优先填补 FTTH<10% 的市场空白（危地马拉/萨尔瓦多/巴拉圭）"
+        },
+        {
+          "number": "2",
+          "title": "学习 Iliad 不涨价模式：锁定价格消除 Starlink",
+          "detail": "学习 Iliad 不涨价模式：锁定价格消除 Starlink 的价格叙事优势"
+        },
+        {
+          "number": "3",
+          "title": "推出农村专属低价套餐：$15-20 档位抢占 Starlin",
+          "detail": "推出农村专属低价套餐：$15-20 档位抢占 Starlink 目标用户"
+        }
+      ],
+      "density_label": "medium"
+    },
+    {
+      "slide_number": 9,
+      "template": "closing",
+      "title": "Thank You",
+      "subtitle": "运营商高管 + 战略部 — April 2026"
+    }
+  ]
+}

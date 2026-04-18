@@ -150,12 +150,16 @@ class Orchestrator:
         }
 
         for i, arg in enumerate(arguments):
-            slides = [{"template": "data_story", "focus": arg}]
-            outline["arguments"].append({
-                "title": arg,
-                "slides": slides,
-                "evidence": [],
-            })
+            # 支持 string 或 dict 格式
+            if isinstance(arg, dict):
+                outline["arguments"].append(arg)
+            else:
+                slides = [{"template": "data_story", "focus": arg}]
+                outline["arguments"].append({
+                    "title": arg,
+                    "slides": slides,
+                    "evidence": [],
+                })
 
         # Pyramid Principle 校验
         issues = check_pyramid_principle(outline)
@@ -193,14 +197,36 @@ class Orchestrator:
         })
         slide_num += 1
 
-        # 2. Executive Summary — 用论点标题作为 KPI
+        # 2. Executive Summary — 用采访中的 kpi_data 或从论点提取
         kpis = []
-        for i, arg in enumerate(arguments[:4]):
-            kpis.append({
-                "value": f"#{i+1}",
-                "label": arg.get("title", "")[:40],
-                "detail": "",
-            })
+        kpi_data = interview.get("kpi_data", [])
+        if kpi_data:
+            # 用户提供了结构化 KPI 数据
+            for kpi in kpi_data[:4]:
+                kpis.append({
+                    "value": kpi.get("value", ""),
+                    "label": kpi.get("label", ""),
+                    "detail": kpi.get("detail", ""),
+                })
+        else:
+            # 从论点标题自动提取数字作为 KPI（尽力而为）
+            import re
+            for i, arg in enumerate(arguments[:4]):
+                title = arg.get("title", "")
+                # 尝试提取标题中的第一个数字+单位作为 KPI 值
+                num_match = re.search(r'(\d+[\.,]?\d*\s*[%$€¥M万亿]+|\$?\d+[\.,]?\d*[MBK]?\b)', title)
+                if num_match:
+                    kpis.append({
+                        "value": num_match.group(0),
+                        "label": title[:40],
+                        "detail": "",
+                    })
+                else:
+                    kpis.append({
+                        "value": f"Point {i+1}",
+                        "label": title[:40],
+                        "detail": "",
+                    })
         slides.append({
             "slide_number": slide_num,
             "template": "executive_summary",
@@ -224,28 +250,35 @@ class Orchestrator:
                     "density_label": "medium",
                 }
 
-                # data_story 需要图表数据
+                # data_story — 优先用用户提供的 chart_data
                 if template == "data_story":
-                    slide_data["chart"] = {
-                        "type": "bar",
-                        "categories": ["Category A", "Category B", "Category C"],
-                        "series": [{"name": "Value", "values": [100, 150, 120]}],
-                        "y_axis_title": "Value",
-                        "show_data_labels": True,
-                    }
-                    slide_data["insight"] = f"Key insight from: {s.get('focus', '')}"
-                    slide_data["source"] = "Data source to be confirmed"
+                    chart_data = s.get("chart_data")
+                    if chart_data:
+                        slide_data["chart"] = chart_data
+                    else:
+                        # 无数据时标记为需要填充（Gate 会拦截占位数据）
+                        slide_data["chart"] = {
+                            "type": "bar",
+                            "categories": ["[需要填充真实数据]"],
+                            "series": [{"name": "Data", "values": [0]}],
+                            "y_axis_title": "[单位]",
+                        }
+                    slide_data["insight"] = s.get("insight", f"[需要填充: {s.get('focus', '')} 的关键洞察]")
+                    # source 从 evidence 获取
+                    evidence = arg.get("evidence", [])
+                    slide_data["source"] = ", ".join(evidence) if evidence else "[需要填充数据来源]"
 
-                # comparison 需要左右数据
+                # comparison — 优先用用户提供的对比数据
                 elif template == "comparison":
-                    slide_data["left"] = {
-                        "label": "Option A",
-                        "points": ["Point 1", "Point 2", "Point 3"],
-                    }
-                    slide_data["right"] = {
-                        "label": "Option B",
-                        "points": ["Point 1", "Point 2", "Point 3"],
-                    }
+                    comp_data = s.get("comparison_data", {})
+                    slide_data["left"] = comp_data.get("left", {
+                        "label": "[选项 A]",
+                        "points": ["[需要填充对比点]"],
+                    })
+                    slide_data["right"] = comp_data.get("right", {
+                        "label": "[选项 B]",
+                        "points": ["[需要填充对比点]"],
+                    })
 
                 slides.append(slide_data)
                 slide_num += 1
@@ -253,7 +286,7 @@ class Orchestrator:
         # N+1. Recommendation（如果有 actions）
         if actions:
             recs = []
-            for i, action in enumerate(actions[:3]):
+            for i, action in enumerate(actions[:5]):  # 支持最多 5 个行动建议
                 recs.append({
                     "number": str(i + 1),
                     "title": action.split(":")[0] if ":" in action else action[:30],

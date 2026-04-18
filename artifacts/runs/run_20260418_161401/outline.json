@@ -1,0 +1,184 @@
+{
+  "top_conclusion": "Starlink 在 FTTH 覆盖薄弱的拉美市场威胁极大，3 国已达平价，运营商需 6 大防御策略",
+  "narrative_flow": "conclusion_first",
+  "arguments": [
+    {
+      "title": "FTTH 覆盖缺口决定威胁等级：渗透率<10% 的市场 Starlink 用户增长超 100%",
+      "slides": [
+        {
+          "template": "data_story",
+          "focus": "FTTH vs Starlink 增长",
+          "chart_data": {
+            "type": "bar",
+            "categories": [
+              "玻利维亚",
+              "危地马拉",
+              "巴拉圭",
+              "萨尔瓦多",
+              "哥伦比亚",
+              "波兰",
+              "爱尔兰",
+              "法国"
+            ],
+            "series": [
+              {
+                "name": "Starlink YoY增长(%)",
+                "values": [
+                  1144,
+                  125,
+                  165,
+                  89,
+                  72,
+                  4,
+                  45,
+                  20
+                ]
+              }
+            ],
+            "y_axis_title": "YoY增长率(%)"
+          },
+          "insight": "FTTH<10%的市场（BO/GT/PY/SV）Starlink增长率均超80%。覆盖空白=Starlink蓝海。"
+        }
+      ],
+      "evidence": [
+        "StarlinkInsider 2024-2025",
+        "FTTH Council Europe 2025"
+      ]
+    },
+    {
+      "title": "Starlink Lite 已在 3 个市场达到平价：SV $35=Tigo，IE €29<eir Y2 €76",
+      "slides": [
+        {
+          "template": "data_story",
+          "focus": "Starlink vs 运营商价格",
+          "chart_data": {
+            "type": "bar",
+            "categories": [
+              "萨尔瓦多",
+              "爱尔兰",
+              "乌拉圭",
+              "意大利",
+              "法国",
+              "智利"
+            ],
+            "series": [
+              {
+                "name": "Starlink Lite($)",
+                "values": [
+                  35,
+                  32,
+                  40,
+                  32,
+                  32,
+                  36
+                ]
+              },
+              {
+                "name": "最便宜运营商($)",
+                "values": [
+                  35,
+                  33,
+                  35,
+                  22,
+                  20,
+                  12
+                ]
+              }
+            ],
+            "y_axis_title": "月费(USD等值)"
+          },
+          "insight": "萨尔瓦多完全平价。爱尔兰eir Y2涨到€76后Starlink Lite €29反而更便宜。"
+        }
+      ],
+      "evidence": [
+        "14国108条套餐数据",
+        "StarlinkInsider价格历史"
+      ]
+    },
+    {
+      "title": "5 种定价模式决定防御能力：不涨价最强，Y1/Y2跳涨最弱",
+      "slides": [
+        {
+          "template": "data_story",
+          "focus": "定价模式vs防御效果",
+          "chart_data": {
+            "type": "bar",
+            "categories": [
+              "永不涨价(Iliad)",
+              "多年保价(Free)",
+              "Y1/Y2跳涨(eir)",
+              "固定无合约(Tigo)",
+              "国企覆盖(Antel)"
+            ],
+            "series": [
+              {
+                "name": "防御评分(10=最强)",
+                "values": [
+                  9,
+                  8,
+                  3,
+                  6,
+                  9
+                ]
+              }
+            ],
+            "y_axis_title": "防御评分"
+          },
+          "insight": "Y1/Y2跳涨(eir:€30→€76)反而帮Starlink获客。不涨价是最有效的防御武器。"
+        }
+      ],
+      "evidence": [
+        "14国运营商定价分析"
+      ]
+    },
+    {
+      "title": "6大防御战略可降低Starlink渗透率40-60%，需立即行动",
+      "slides": [
+        {
+          "template": "data_story",
+          "focus": "防御战略优先级",
+          "chart_data": {
+            "type": "bar",
+            "categories": [
+              "加速FTTH",
+              "FWA 5G",
+              "固定价格",
+              "农村套餐",
+              "捆绑增值",
+              "政府合作"
+            ],
+            "series": [
+              {
+                "name": "预期影响",
+                "values": [
+                  9,
+                  8,
+                  7,
+                  7,
+                  5,
+                  6
+                ]
+              },
+              {
+                "name": "实施难度",
+                "values": [
+                  8,
+                  6,
+                  3,
+                  4,
+                  3,
+                  7
+                ]
+              }
+            ],
+            "y_axis_title": "评分(1-10)"
+          },
+          "insight": "固定价格模式最容易执行且效果显著——学习Iliad/SFR立即锁价。"
+        }
+      ],
+      "evidence": [
+        "运营商防御策略分析"
+      ]
+    }
+  ]
+}

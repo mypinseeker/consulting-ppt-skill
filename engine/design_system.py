@@ -59,11 +59,30 @@ class BrandPalette:
         brand.accent_dark  # Muted accent
     """
 
+    # 极端色警告阈值
+    _EXTREME_DARK = 0.03   # 接近纯黑
+    _EXTREME_LIGHT = 0.95  # 接近纯白
+
     def __init__(self, primary: str, secondary: str, accent: str,
                  font_family: str = "Arial"):
         p = _hex_to_rgb(primary)
         s = _hex_to_rgb(secondary)
         a = _hex_to_rgb(accent)
+
+        # 极端色检测和修正
+        self._warnings = []
+        if rgb_luminance(*s) < self._EXTREME_DARK:
+            self._warnings.append(
+                f"⚠️ Secondary 色 {secondary} 接近纯黑，shade/tint 系统将退化。"
+                f"建议使用深灰（如 #333333）代替纯黑。"
+            )
+        if rgb_luminance(*a) > self._EXTREME_LIGHT:
+            self._warnings.append(
+                f"⚠️ Accent 色 {accent} 接近纯白，在浅色背景上不可见。"
+                f"建议使用有色度的浅色（如 #FFD100）。"
+            )
+        for w in self._warnings:
+            print(w)
 
         # ── 3 Brand Colors ──
         self.primary   = _rgb_to_pptx(*p)

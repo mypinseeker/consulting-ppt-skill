@@ -58,6 +58,34 @@ VALID_CHART_TYPES = {
 VALID_DENSITY_LABELS = {"low", "medium", "high"}
 
 # ====================================================================
+# 占位数据检测
+# ====================================================================
+
+PLACEHOLDER_PATTERNS = [
+    r"^Category [A-Z]$",
+    r"^Option [A-Z]$",
+    r"^Point \d+$",
+    r"^Series \d+$",
+    r"^Data source to be confirmed$",
+    r"^Key insight from:",
+    r"^#\d+$",           # KPI 值 = "#1", "#2"
+    r"^To be confirmed$",
+    r"^\d{2,3}$",        # 裸数字如 100, 150, 120（无单位的占位值）
+]
+
+import re as _re
+_PLACEHOLDER_RES = [_re.compile(p, _re.IGNORECASE) for p in PLACEHOLDER_PATTERNS]
+
+
+def _is_placeholder(text: str) -> bool:
+    """检测文本是否为占位内容"""
+    text = text.strip()
+    for pattern in _PLACEHOLDER_RES:
+        if pattern.match(text):
+            return True
+    return False
+
+# ====================================================================
 # Action Title 校验规则
 # ====================================================================
 
@@ -203,13 +231,40 @@ def validate_plan(plan_path: str) -> List[ValidationError]:
                     errors.append(ValidationError(sn, f"kpis[{j}].value", "WARNING",
                                   f"KPI 值 '{value}' 缺少单位（$M, %, months 等）"))
 
-        # 图表类型校验
+        # 图表类型校验 + 占位数据检测
         if template == "data_story":
             chart = slide.get("chart", {})
             chart_type = chart.get("type")
             if chart_type and chart_type not in VALID_CHART_TYPES:
                 errors.append(ValidationError(sn, "chart.type", "WARNING",
                               f"未知图表类型 '{chart_type}'，可选: {sorted(VALID_CHART_TYPES)}"))
+
+            # 检测图表占位数据
+            for cat in chart.get("categories", []):
+                if _is_placeholder(str(cat)):
+                    errors.append(ValidationError(sn, "chart.categories", "CRITICAL",
+                                  f"图表包含占位数据: '{cat}'。必须替换为真实数据"))
+                    break
+
+            # 检测 insight 占位
+            insight = slide.get("insight", "")
+            if insight and _is_placeholder(insight):
+                errors.append(ValidationError(sn, "insight", "WARNING",
+                              f"Insight 是占位文本: '{insight}'。应替换为真正的数据洞察"))
+
+            # 检测 source 占位
+            source = slide.get("source", "")
+            if source and _is_placeholder(source):
+                errors.append(ValidationError(sn, "source", "WARNING",
+                              f"Source 是占位文本: '{source}'。应替换为真实数据来源"))
+
+        # KPI 占位值检测
+        if template == "executive_summary":
+            for j, kpi in enumerate(slide.get("kpis", [])):
+                value = kpi.get("value", "")
+                if _is_placeholder(str(value)):
+                    errors.append(ValidationError(sn, f"kpis[{j}].value", "CRITICAL",
+                                  f"KPI 值是占位数据: '{value}'。必须替换为真实数据（如 '+57%', '$194亿'）"))
 
     # 结构完整性
     templates_used = [s.get("template") for s in plan["slides"]]

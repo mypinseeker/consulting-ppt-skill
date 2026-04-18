@@ -1,0 +1,56 @@
+{
+  "top_conclusion": "Starlink 在 FTTH 覆盖薄弱的拉美市场威胁极大（3 国已达平价），欧洲因不涨价模式威胁可控，运营商需 6 大防御策略",
+  "narrative_flow": "conclusion_first",
+  "arguments": [
+    {
+      "title": "覆盖缺口决定威胁等级：FTTH<10% 的拉美市场 Starlink 用户增长超 100%，FTTH>60% 的欧洲市场增长仅 4-20%",
+      "slides": [
+        {
+          "template": "data_story",
+          "focus": "覆盖缺口决定威胁等级：FTTH<10% 的拉美市场 Starlink 用户增长超 100%，FTTH>60% 的欧洲市场增长仅 4-20%"
+        }
+      ],
+      "evidence": []
+    },
+    {
+      "title": "Starlink Lite 已在 3 个市场达到平价或更便宜（萨尔瓦多 $35 = Tigo $35，爱尔兰 €29 < eir Y2 €76，乌拉圭 vs Antel）",
+      "slides": [
+        {
+          "template": "data_story",
+          "focus": "Starlink Lite 已在 3 个市场达到平价或更便宜（萨尔瓦多 $35 = Tigo $35，爱尔兰 €29 < eir Y2 €76，乌拉圭 vs Antel）"
+        }
+      ],
+      "evidence": []
+    },
+    {
+      "title": "5 种定价模式决定防御能力：不涨价模式（Iliad/SFR）防御最强，Y1/Y2 跳涨模式（eir/Orange）防御最弱",
+      "slides": [
+        {
+          "template": "data_story",
+          "focus": "5 种定价模式决定防御能力：不涨价模式（Iliad/SFR）防御最强，Y1/Y2 跳涨模式（eir/Orange）防御最弱"
+        }
+      ],
+      "evidence": []
+    },
+    {
+      "title": "14 国 108 套餐全运营商对比揭示：运营商自己的涨价策略反而在帮 Starlink 获客",
+      "slides": [
+        {
+          "template": "data_story",
+          "focus": "14 国 108 套餐全运营商对比揭示：运营商自己的涨价策略反而在帮 Starlink 获客"
+        }
+      ],
+      "evidence": []
+    },
+    {
+      "title": "6 大防御战略：加速 FTTH 覆盖、推出 FWA 5G 反击、学习固定价格模式、捆绑增值服务、农村专属套餐、政府补贴合作",
+      "slides": [
+        {
+          "template": "data_story",
+          "focus": "6 大防御战略：加速 FTTH 覆盖、推出 FWA 5G 反击、学习固定价格模式、捆绑增值服务、农村专属套餐、政府补贴合作"
+        }
+      ],
+      "evidence": []
+    }
+  ]
+}
