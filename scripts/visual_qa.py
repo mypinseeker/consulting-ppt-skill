@@ -78,22 +78,40 @@ def check_overlap(shapes, slide_num: int) -> List[QAIssue]:
                 "bottom": s.top + s.height,
             })
 
-    # 过滤掉全页背景矩形（宽/高接近 slide 尺寸的 shape）
+    # 过滤掉不参与重叠检测的 shape
     content_boxes = []
     for b in boxes:
         w = b["right"] - b["left"]
         h = b["bottom"] - b["top"]
-        # 如果 shape 宽/高 > slide 的 80%，视为背景层，不参与重叠检测
+        # 全页背景矩形
         if w > SLIDE_W_EMU * 0.8 and h > SLIDE_H_EMU * 0.5:
             continue
-        # 跳过装饰性窄条（高度 < 0.15 inch 的线条/横条）
+        # 装饰性窄条（线条/横条/accent bar）
         if h < Inches(0.15) or w < Inches(0.15):
+            continue
+        # Insight Box 标签栏（高度 < 0.35 inch 且宽度 > 2 inch = KEY INSIGHT bar）
+        if h < Inches(0.35) and w > Inches(2.0):
+            continue
+        # 小圆形（编号圆 Oval，面积 < 0.5 sq inch）
+        if w < Inches(0.6) and h < Inches(0.6):
+            continue
+        # Footer bar（y > 7 inch）
+        if b["top"] > Inches(7.0):
             continue
         content_boxes.append(b)
 
     for i in range(len(content_boxes)):
         for j in range(i + 1, len(content_boxes)):
             a, b = content_boxes[i], content_boxes[j]
+
+            # 容器内嵌套过滤：如果一个 shape 完全包含另一个，视为"内容在容器中"
+            a_contains_b = (a["left"] <= b["left"] and a["top"] <= b["top"]
+                           and a["right"] >= b["right"] and a["bottom"] >= b["bottom"])
+            b_contains_a = (b["left"] <= a["left"] and b["top"] <= a["top"]
+                           and b["right"] >= a["right"] and b["bottom"] >= a["bottom"])
+            if a_contains_b or b_contains_a:
+                continue  # 容器嵌套，不是真正重叠
+
             x_overlap = max(0, min(a["right"], b["right"]) - max(a["left"], b["left"]))
             y_overlap = max(0, min(a["bottom"], b["bottom"]) - max(a["top"], b["top"]))
             overlap_area = x_overlap * y_overlap
@@ -104,7 +122,7 @@ def check_overlap(shapes, slide_num: int) -> List[QAIssue]:
                 min_area = min(a_area, b_area) if min(a_area, b_area) > 0 else 1
                 ratio = overlap_area / min_area
 
-                if ratio > 0.5:  # 提高阈值到 50%，减少误报
+                if ratio > 0.5:
                     issues.append(QAIssue(
                         slide=slide_num,
                         check="overlap",

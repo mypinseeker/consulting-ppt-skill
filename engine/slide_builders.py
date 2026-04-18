@@ -378,7 +378,7 @@ class DeckBuilder:
             cp.alignment = PP_ALIGN.CENTER; circle.text_frame.vertical_anchor = MSO_ANCHOR.MIDDLE
 
             # Title
-            ttl = slide.shapes.add_textbox(x + Inches(0.6), y, Inches(card_w - 0.6), Inches(0.5))
+            ttl = slide.shapes.add_textbox(x + Inches(0.6), y, card_w - Inches(0.6), Inches(0.5))
             tp = ttl.text_frame.paragraphs[0]
             tp.text = rec_title; tp.font.size = Pt(14); tp.font.bold = True
             tp.font.color.rgb = colors[i % len(colors)]; tp.font.name = self.brand.font_family
