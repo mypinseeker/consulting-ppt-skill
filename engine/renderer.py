@@ -39,6 +39,19 @@ class PlanRenderer:
             font_family=brand_cfg.get("font_family", "Arial"),
         )
 
+    def _resolve_number_format(self, chart: dict) -> str:
+        """优先级：显式 number_format > data_type 绑定 > 自动推断"""
+        # 1. 用户显式指定
+        if chart.get("number_format"):
+            return chart["number_format"]
+        # 2. data_type 绑定（最可靠）
+        from .planning_schema import VALID_DATA_TYPES
+        data_type = chart.get("data_type")
+        if data_type and data_type in VALID_DATA_TYPES:
+            return VALID_DATA_TYPES[data_type]
+        # 3. 自动推断（兜底）
+        return self._infer_number_format(chart)
+
     @staticmethod
     def _infer_number_format(chart: dict) -> str:
         """从 y_axis_title 和数据自动推断数据标签格式"""
@@ -173,7 +186,7 @@ class PlanRenderer:
             y_axis_title=chart.get("y_axis_title"),
             insight=data.get("insight"),
             source=data.get("source"),
-            number_format=chart.get("number_format", self._infer_number_format(chart)),
+            number_format=self._resolve_number_format(chart),
         )
 
     def _render_comparison(self, data: dict):

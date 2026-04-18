@@ -116,7 +116,15 @@ pptx_path = orc.run_from_plan("path/to/plan.json")
 - Data labels on every bar/point
 - One chart per slide (two max for comparison)
 
-### Rule 6: Pyramid Principle
+### Rule 6: Chart Data Type Binding
+- Every chart in Plan JSON MUST have a `data_type` field
+- Valid types: `percentage` | `currency_usd` | `currency_eur` | `score` | `count` | `plain`
+- Gate will **CRITICAL** block if `data_type` contradicts `y_axis_title`
+  - BAD: `data_type: "currency_usd"` + `y_axis_title: "增长率(%)"`
+  - GOOD: `data_type: "percentage"` + `y_axis_title: "YoY增长率(%)"`
+- Format is auto-bound: `percentage` → `#,##0"%"`, `currency_usd` → `$#,##0`, etc.
+
+### Rule 7: Pyramid Principle
 - Top-level conclusion first (top_conclusion)
 - 2-5 supporting arguments, MECE
 - Each argument title answers "So What?"
@@ -194,6 +202,7 @@ Stage 7: EXPORT       → delivery_manifest  (最终 PPTX)
       "action_title": "Conclusion sentence about what the chart shows",
       "chart": {
         "type": "stacked_bar",
+        "data_type": "currency_usd",
         "categories": ["A", "B", "C"],
         "series": [{"name": "Series 1", "values": [10, 20, 30]}],
         "y_axis_title": "Cost ($M)"

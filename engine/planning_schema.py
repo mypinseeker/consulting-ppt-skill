@@ -55,6 +55,58 @@ VALID_CHART_TYPES = {
     "bubble", "scatter",
 }
 
+# ====================================================================
+# 数据类型 → 格式绑定（约束式自由的"约束"部分）
+# ====================================================================
+
+VALID_DATA_TYPES = {
+    "percentage":  '#,##0"%"',       # 增长率、占比、渗透率
+    "currency_usd": '$#,##0',        # 美元
+    "currency_eur": '€#,##0',        # 欧元
+    "currency_cny": '¥#,##0',        # 人民币
+    "score":       '#,##0.0',        # 评分、指数
+    "count":       '#,##0',          # 数量、人数、户数
+    "ratio":       '#,##0.0',        # 比率（非百分比）
+    "plain":       '#,##0',          # 纯数字
+}
+
+def _check_data_type_consistency(chart: dict, sn: int) -> list:
+    """检查 chart 的 data_type 是否与 y_axis_title 一致"""
+    errors = []
+    data_type = chart.get("data_type")
+    y_title = (chart.get("y_axis_title") or "").lower()
+
+    if not data_type:
+        # 没有声明 data_type → WARNING，建议添加
+        if y_title:
+            errors.append(ValidationError(sn, "chart.data_type", "WARNING",
+                f"图表缺少 data_type 字段。y_axis='{chart.get('y_axis_title')}' "
+                f"建议添加 data_type (可选: {sorted(VALID_DATA_TYPES.keys())})"))
+        return errors
+
+    if data_type not in VALID_DATA_TYPES:
+        errors.append(ValidationError(sn, "chart.data_type", "WARNING",
+            f"未知 data_type '{data_type}'，可选: {sorted(VALID_DATA_TYPES.keys())}"))
+        return errors
+
+    # 交叉验证：data_type 和 y_axis_title 是否矛盾
+    contradictions = {
+        "percentage": ["$", "€", "¥", "usd", "eur", "cost", "price", "月费"],
+        "currency_usd": ["%", "率", "评分", "score", "ratio"],
+        "currency_eur": ["%", "率", "评分", "score", "$", "usd"],
+        "score": ["$", "€", "%", "率"],
+    }
+
+    if data_type in contradictions:
+        for bad_keyword in contradictions[data_type]:
+            if bad_keyword in y_title:
+                errors.append(ValidationError(sn, "chart.data_type", "CRITICAL",
+                    f"data_type='{data_type}' 与 y_axis_title='{chart.get('y_axis_title')}' 矛盾！"
+                    f"（'{bad_keyword}' 不应出现在 {data_type} 类型的图表中）"))
+                break
+
+    return errors
+
 VALID_DENSITY_LABELS = {"low", "medium", "high"}
 
 # ====================================================================
@@ -238,6 +290,9 @@ def validate_plan(plan_path: str) -> List[ValidationError]:
             if chart_type and chart_type not in VALID_CHART_TYPES:
                 errors.append(ValidationError(sn, "chart.type", "WARNING",
                               f"未知图表类型 '{chart_type}'，可选: {sorted(VALID_CHART_TYPES)}"))
+
+            # 数据类型一致性检查
+            errors.extend(_check_data_type_consistency(chart, sn))
 
             # 检测图表占位数据
             for cat in chart.get("categories", []):
