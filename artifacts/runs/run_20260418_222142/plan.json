@@ -1,0 +1,106 @@
+{
+  "metadata": {
+    "title": "Starlink 威胁",
+    "date": "April 2026",
+    "brand": {
+      "primary": "#CF0A2C",
+      "secondary": "#333333",
+      "accent": "#FFD100"
+    },
+    "total_slides": 6,
+    "generated_by": "consulting-ppt-skill v3.0"
+  },
+  "slides": [
+    {
+      "slide_number": 1,
+      "template": "cover",
+      "title": "Starlink 威胁",
+      "subtitle": "Starlink在拉美威胁大，需防御",
+      "date": "April 2026"
+    },
+    {
+      "slide_number": 2,
+      "template": "executive_summary",
+      "action_title": "Starlink在拉美威胁大，需防御",
+      "subtitle": "Key findings summary",
+      "kpis": [
+        {
+          "value": "+1144%",
+          "label": "最高增长",
+          "detail": ""
+        }
+      ],
+      "density_label": "medium"
+    },
+    {
+      "slide_number": 3,
+      "template": "data_story",
+      "action_title": "FTTH覆盖缺口决定威胁等级",
+      "subtitle": "增长",
+      "density_label": "medium",
+      "chart": {
+        "type": "bar",
+        "data_type": "percentage",
+        "categories": [
+          "玻利维亚",
+          "法国"
+        ],
+        "series": [
+          {
+            "name": "YoY",
+            "values": [
+              1144,
+              20
+            ]
+          }
+        ],
+        "y_axis_title": "增长(%)"
+      },
+      "insight": "覆盖空白=蓝海",
+      "source": "StarlinkInsider"
+    },
+    {
+      "slide_number": 4,
+      "template": "data_story",
+      "action_title": "Additional analysis supports the conclusion",
+      "subtitle": "supporting data",
+      "density_label": "medium",
+      "chart": {
+        "type": "bar",
+        "categories": [
+          "[需要填充真实数据]"
+        ],
+        "series": [
+          {
+            "name": "Data",
+            "values": [
+              0
+            ]
+          }
+        ],
+        "y_axis_title": "[单位]"
+      },
+      "insight": "[需要填充: supporting data 的关键洞察]",
+      "source": "To be confirmed"
+    },
+    {
+      "slide_number": 5,
+      "template": "recommendation",
+      "action_title": "1 recommended actions to move forward",
+      "recommendations": [
+        {
+          "number": "1",
+          "title": "加速FTTH",
+          "detail": "加速FTTH"
+        }
+      ],
+      "density_label": "medium"
+    },
+    {
+      "slide_number": 6,
+      "template": "closing",
+      "title": "Thank You",
+      "subtitle": "CTO — April 2026"
+    }
+  ]
+}

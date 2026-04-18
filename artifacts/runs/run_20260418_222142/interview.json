@@ -1,0 +1,53 @@
+{
+  "audience": "CTO",
+  "core_question": "Starlink 威胁",
+  "hypothesis": "Starlink在拉美威胁大，需防御",
+  "key_arguments": [
+    {
+      "title": "FTTH覆盖缺口决定威胁等级",
+      "slides": [
+        {
+          "template": "data_story",
+          "focus": "增长",
+          "chart_data": {
+            "type": "bar",
+            "data_type": "percentage",
+            "categories": [
+              "玻利维亚",
+              "法国"
+            ],
+            "series": [
+              {
+                "name": "YoY",
+                "values": [
+                  1144,
+                  20
+                ]
+              }
+            ],
+            "y_axis_title": "增长(%)"
+          },
+          "insight": "覆盖空白=蓝海"
+        }
+      ],
+      "evidence": [
+        "StarlinkInsider"
+      ]
+    }
+  ],
+  "kpi_data": [
+    {
+      "value": "+1144%",
+      "label": "最高增长",
+      "detail": ""
+    }
+  ],
+  "actions": [
+    "加速FTTH"
+  ],
+  "brand": {
+    "primary": "#CF0A2C",
+    "secondary": "#333333",
+    "accent": "#FFD100"
+  }
+}

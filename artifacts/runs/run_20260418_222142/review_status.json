@@ -1,0 +1,15 @@
+{
+  "status": "APPROVED",
+  "output_file": "/home/Administrator/Workspace/consulting-ppt-skill/artifacts/runs/run_20260418_222142/deck.pptx",
+  "plan_file": "/home/Administrator/Workspace/consulting-ppt-skill/artifacts/runs/run_20260418_222142/plan.json",
+  "total_slides": 6,
+  "qa_passed": true,
+  "created_at": "2026-04-18T22:21:42.652113",
+  "instructions": [
+    "1. 打开 PPTX 检查: /home/Administrator/Workspace/consulting-ppt-skill/artifacts/runs/run_20260418_222142/deck.pptx",
+    "2. 如需修改内容: 编辑 /home/Administrator/Workspace/consulting-ppt-skill/artifacts/runs/run_20260418_222142/plan.json 中对应页的数据",
+    "3. 审核通过后调用: Orchestrator('run_20260418_222142').approve_and_deliver()",
+    "4. 如需重新渲染: Orchestrator('run_20260418_222142').rerender()"
+  ],
+  "approved_at": "2026-04-18T22:21:42.674900"
+}

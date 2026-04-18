@@ -239,22 +239,7 @@ class Orchestrator:
             print(f"  ❌ 渲染失败: {e}")
             return None
 
-        # Manual audit checkpoint
-        if manual_audit:
-            from pptx import Presentation as PptxPres
-            prs = PptxPres(output_path)
-            print(f"\n📋 Manual Audit — {len(prs.slides)} 页待审核:")
-            for i, slide in enumerate(prs.slides):
-                txt = ""
-                for s in slide.shapes:
-                    if hasattr(s, 'text') and len(s.text) > 10:
-                        txt = s.text.split(chr(10))[0][:60]
-                        break
-                print(f"  Page {i+1}: {txt}")
-            print(f"\n⏸️ 人工审核点：请检查 {output_path}")
-            print(f"  如需修改，编辑 plan.json 后重新运行")
-
-        # 简单 QA
+        # QA
         from pptx import Presentation
         prs = Presentation(output_path)
         qa_report = {
@@ -276,7 +261,57 @@ class Orchestrator:
         self.run.save_artifact(Stage.QA, qa_report)
         gate = self.run.check_gate(Stage.QA)
 
-        # 导出清单
+        # ── 两阶段审核 ──
+        if manual_audit:
+            # Stage 1: 渲染完成，暂停等待用户审核
+            print(f"\n{'─'*60}")
+            print(f"📋 人工审核 — 第一阶段：逐页检查")
+            print(f"{'─'*60}")
+            for i, slide in enumerate(prs.slides):
+                txt = ""
+                for s in slide.shapes:
+                    if hasattr(s, 'text') and len(s.text) > 10:
+                        txt = s.text.split(chr(10))[0][:60]
+                        break
+                has_chart = any(hasattr(s, 'chart') for s in slide.shapes)
+                chart_mark = " 📊" if has_chart else ""
+                print(f"  Page {i+1}: {txt}{chart_mark}")
+
+            # 写审核状态文件
+            review_status = {
+                "status": "PENDING_REVIEW",
+                "output_file": output_path,
+                "plan_file": str(plan_path),
+                "total_slides": len(prs.slides),
+                "qa_passed": bool(gate),
+                "created_at": datetime.now().isoformat(),
+                "instructions": [
+                    f"1. 打开 PPTX 检查: {output_path}",
+                    f"2. 如需修改内容: 编辑 {plan_path} 中对应页的数据",
+                    f"3. 审核通过后调用: Orchestrator('{self.run.run_id}').approve_and_deliver()",
+                    f"4. 如需重新渲染: Orchestrator('{self.run.run_id}').rerender()",
+                ],
+            }
+            review_path = self.run.run_dir / "review_status.json"
+            review_path.write_text(json.dumps(review_status, indent=2, ensure_ascii=False))
+
+            print(f"\n⏸️ 流水线已暂停，等待人工审核：")
+            print(f"   📄 PPTX: {output_path}")
+            print(f"   📝 Plan: {plan_path}")
+            print(f"\n   审核通过后执行:")
+            print(f"   >>> from engine.orchestrator import Orchestrator")
+            print(f"   >>> Orchestrator('{self.run.run_id}').approve_and_deliver()")
+            print(f"\n   需要修改后重渲染:")
+            print(f"   >>> Orchestrator('{self.run.run_id}').rerender()")
+            return output_path  # 返回 PPTX 路径但不生成 manifest
+
+        # ── 自动模式：直接生成 delivery manifest ──
+        self._generate_manifest(plan, prs, output_path, gate, qa_report)
+
+        return output_path
+
+    def _generate_manifest(self, plan, prs, output_path, gate, qa_report):
+        """生成交付清单"""
         manifest = {
             "output_file": output_path,
             "total_slides": len(prs.slides),
@@ -291,6 +326,64 @@ class Orchestrator:
             "chart_count": sum(1 for slide in prs.slides for s in slide.shapes if hasattr(s, 'chart')),
         }
         self.run.save_artifact(Stage.EXPORT, manifest)
+
+    def approve_and_deliver(self):
+        """第二阶段：用户审核通过，生成最终 delivery manifest"""
+        if not self.run:
+            print("❌ 没有活跃的运行。请用 Orchestrator('run_id') 指定运行。")
+            return None
+
+        review_path = self.run.run_dir / "review_status.json"
+        if not review_path.exists():
+            print("❌ 没有待审核的运行。")
+            return None
+
+        review = json.loads(review_path.read_text())
+        output_path = review["output_file"]
+        plan_path = self.run.run_dir / "plan.json"
+
+        from pptx import Presentation
+        prs = Presentation(output_path)
+        plan = json.loads(plan_path.read_text())
+        qa_report = self.run.load_artifact(Stage.QA) or {"warning_count": 0}
+        gate = self.run.check_gate(Stage.QA)
+
+        self._generate_manifest(plan, prs, output_path, gate, qa_report)
+
+        # 更新审核状态
+        review["status"] = "APPROVED"
+        review["approved_at"] = datetime.now().isoformat()
+        review_path.write_text(json.dumps(review, indent=2, ensure_ascii=False))
+
+        print(f"\n✅ 审核通过！Delivery manifest 已生成。")
+        print(f"   📄 最终输出: {output_path}")
+        print(self.run.status())
+        return output_path
+
+    def rerender(self):
+        """用户修改 plan.json 后重新渲染"""
+        if not self.run:
+            print("❌ 没有活跃的运行。")
+            return None
+
+        plan_path = self.run.run_dir / "plan.json"
+        if not plan_path.exists():
+            print("❌ plan.json 不存在。")
+            return None
+
+        plan = json.loads(plan_path.read_text())
+        output_path = str(self.run.run_dir / "deck.pptx")
+
+        try:
+            renderer = PlanRenderer(str(plan_path))
+            renderer.render(output_path)
+        except Exception as e:
+            print(f"❌ 渲染失败: {e}")
+            return None
+
+        print(f"✅ 重新渲染完成: {output_path}")
+        print(f"   继续审核后调用: approve_and_deliver()")
+        return output_path
 
         return output_path
 
