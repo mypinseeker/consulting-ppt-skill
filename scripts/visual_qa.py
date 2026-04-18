@@ -145,35 +145,41 @@ def check_text_overflow(shapes, slide_num: int) -> List[QAIssue]:
         try:
             tf = s.text_frame
             total_text = tf.text
-            if not total_text:
+            if not total_text or len(total_text) < 3:
                 continue
 
-            # 估算文字需要的空间
-            avg_char_width_pt = 6  # 粗略估算，Arial 11pt 约 6pt/字符
-            max_font_size = Pt(11)
+            # 获取最大字号
+            max_font_size_emu = Pt(11)
             for p in tf.paragraphs:
                 if p.font and p.font.size:
-                    max_font_size = max(max_font_size, p.font.size)
+                    max_font_size_emu = max(max_font_size_emu, p.font.size)
+            font_size_pt = max_font_size_emu / 12700
 
-            # 容器宽度（pt）
-            if s.width:
-                container_width_pt = s.width / 12700  # EMU to pt
-                chars_per_line = container_width_pt / avg_char_width_pt
-                lines_needed = len(total_text) / max(chars_per_line, 1)
+            # 区分中英文字符宽度
+            cn_count = sum(1 for c in total_text if ord(c) > 127)
+            en_count = len(total_text) - cn_count
+            # 中文字符宽度 ≈ 字号，英文 ≈ 字号 × 0.55
+            text_total_width_pt = cn_count * font_size_pt + en_count * font_size_pt * 0.55
 
-                # 容器高度（pt）
+            if s.width and s.height:
+                container_width_pt = s.width / 12700
                 container_height_pt = s.height / 12700
-                line_height_pt = (max_font_size / 12700) * 1.3 if max_font_size else 14
+                line_height_pt = font_size_pt * 1.4
+
+                # 估算需要多少行
+                lines_needed = text_total_width_pt / max(container_width_pt, 1)
                 lines_available = container_height_pt / max(line_height_pt, 1)
 
-                if lines_needed > lines_available * 1.5:
+                if lines_needed > lines_available * 1.1:
+                    severity = "CRITICAL" if lines_needed > lines_available * 1.5 else "WARNING"
                     issues.append(QAIssue(
                         slide=slide_num,
                         check="text_overflow",
-                        severity="WARNING",
-                        message=f"'{s.name}' 文字可能溢出 ({len(total_text)} 字符, "
-                                f"估算需 {lines_needed:.0f} 行, 容器约 {lines_available:.0f} 行)",
-                        fix_hint="缩减文字或增大容器",
+                        severity=severity,
+                        message=f"'{s.name}' 文字溢出 "
+                                f"({len(total_text)}字, {cn_count}中文, {font_size_pt:.0f}pt, "
+                                f"需{lines_needed:.1f}行/容器{lines_available:.1f}行)",
+                        fix_hint="缩减文字、缩小字号、或增大容器",
                     ))
         except Exception:
             pass

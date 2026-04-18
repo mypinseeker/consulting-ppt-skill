@@ -124,7 +124,14 @@ pptx_path = orc.run_from_plan("path/to/plan.json")
   - GOOD: `data_type: "percentage"` + `y_axis_title: "YoY增长率(%)"`
 - Format is auto-bound: `percentage` → `#,##0"%"`, `currency_usd` → `$#,##0`, etc.
 
-### Rule 7: Pyramid Principle
+### Rule 7: Text Length Limits (CJK-Aware)
+- Cover title + subtitle: **≤35 中文字** (or ≤70 English chars)
+- Action Title: **≤45 中文字** (or ≤85 English chars)
+- KPI label + detail: **≤12 中文字** (or ≤25 English chars)
+- Gate will WARNING if exceeded
+- **Why**: 36pt 中文字符宽度 ≈ 36pt，比英文宽 80%。不限长度必溢出
+
+### Rule 8: Pyramid Principle
 - Top-level conclusion first (top_conclusion)
 - 2-5 supporting arguments, MECE
 - Each argument title answers "So What?"

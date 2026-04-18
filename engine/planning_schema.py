@@ -258,10 +258,46 @@ def validate_plan(plan_path: str) -> List[ValidationError]:
             if not title:
                 errors.append(ValidationError(sn, "action_title", "CRITICAL",
                               "内容页缺少 action_title"))
-            elif not _is_action_title(title):
-                errors.append(ValidationError(sn, "action_title", "WARNING",
-                              f"Action Title 可能不是判断句: '{title}'。"
-                              f"好的 Action Title 示例: 'Switching costs 22-57% more than staying'"))
+            else:
+                if not _is_action_title(title):
+                    errors.append(ValidationError(sn, "action_title", "WARNING",
+                                  f"Action Title 可能不是判断句: '{title}'。"
+                                  f"好的 Action Title 示例: 'Switching costs 22-57% more than staying'"))
+                # 长度限制：20pt 字体在 11.5" 宽框内，中文约 40 字、英文约 80 字符
+                cn_count = sum(1 for c in title if ord(c) > 127)
+                if cn_count > len(title) * 0.3:
+                    # 中文为主
+                    if len(title) > 50:
+                        errors.append(ValidationError(sn, "action_title", "WARNING",
+                                      f"Action Title 过长 ({len(title)}字, {cn_count}中文)，"
+                                      f"建议中文 ≤45 字以避免溢出"))
+                else:
+                    if len(title) > 90:
+                        errors.append(ValidationError(sn, "action_title", "WARNING",
+                                      f"Action Title 过长 ({len(title)}字)，建议英文 ≤85 字"))
+
+        # KPI 值/标签长度限制（36pt 值 + 10pt 标签在 2.7"×1.4" 盒子里）
+        if template == "executive_summary":
+            for j, kpi in enumerate(slide.get("kpis", [])):
+                label = kpi.get("label", "")
+                detail = kpi.get("detail", "")
+                combined = f"{label}{detail}"
+                cn = sum(1 for c in combined if ord(c) > 127)
+                if cn > 0 and len(combined) > 15:
+                    errors.append(ValidationError(sn, f"kpis[{j}].label", "WARNING",
+                                  f"KPI 标签+详情过长 ({len(combined)}字, {cn}中文)，"
+                                  f"建议中文合计 ≤12 字以避免在 KPI 盒子中溢出"))
+
+        # 封面标题+副标题总长限制（36pt+16pt 在 10"×1.5"）
+        if template == "cover":
+            title = slide.get("title", "")
+            subtitle = slide.get("subtitle", "")
+            combined = f"{title} {subtitle}"
+            cn = sum(1 for c in combined if ord(c) > 127)
+            if cn > 0 and len(combined) > 40:
+                errors.append(ValidationError(sn, "cover.title+subtitle", "WARNING",
+                              f"封面标题+副标题过长 ({len(combined)}字, {cn}中文)，"
+                              f"建议合计 ≤35 中文字以避免溢出。可将副标题缩短。"))
 
         # 密度标签
         density = slide.get("density_label")
