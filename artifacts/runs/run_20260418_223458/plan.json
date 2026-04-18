@@ -1,0 +1,254 @@
+{
+  "metadata": {
+    "title": "Starlink 对运营商的威胁与防御",
+    "date": "April 2026",
+    "brand": {
+      "primary": "#CF0A2C",
+      "secondary": "#333333",
+      "accent": "#FFD100"
+    },
+    "total_slides": 8,
+    "generated_by": "consulting-ppt-skill v3.0"
+  },
+  "slides": [
+    {
+      "slide_number": 1,
+      "template": "cover",
+      "title": "Starlink 对运营商的威胁与防御",
+      "subtitle": "Starlink在拉美威胁极大，3国已平价，需防御",
+      "date": "April 2026"
+    },
+    {
+      "slide_number": 2,
+      "template": "executive_summary",
+      "action_title": "Starlink在拉美威胁极大，3国已平价，需防御",
+      "subtitle": "Key findings summary",
+      "kpis": [
+        {
+          "value": "14国",
+          "label": "覆盖市场\n5欧洲+9拉美",
+          "detail": ""
+        },
+        {
+          "value": "3国平价",
+          "label": "Lite已达平价",
+          "detail": ""
+        },
+        {
+          "value": "+1144%",
+          "label": "最高增长率\n玻利维亚",
+          "detail": ""
+        },
+        {
+          "value": "108个",
+          "label": "套餐对比\n全运营商",
+          "detail": ""
+        }
+      ],
+      "density_label": "medium"
+    },
+    {
+      "slide_number": 3,
+      "template": "data_story",
+      "action_title": "FTTH覆盖缺口决定威胁：渗透率<10%市场增长超100%",
+      "subtitle": "增长",
+      "density_label": "medium",
+      "chart": {
+        "type": "bar",
+        "data_type": "percentage",
+        "categories": [
+          "玻利维亚",
+          "危地马拉",
+          "巴拉圭",
+          "萨尔瓦多",
+          "哥伦比亚",
+          "波兰",
+          "爱尔兰",
+          "法国"
+        ],
+        "series": [
+          {
+            "name": "YoY增长率",
+            "values": [
+              1144,
+              125,
+              165,
+              89,
+              72,
+              4,
+              45,
+              20
+            ]
+          }
+        ],
+        "y_axis_title": "增长率(%)"
+      },
+      "insight": "• FTTH<10%的4国增长率均超80%\n• 玻利维亚+1144%：最高增长，2026年初刚上线\n• 覆盖空白=Starlink蓝海\n• 法国+20%最低：FTTH 85%+覆盖有效防御",
+      "source": "StarlinkInsider 2024-2025, FTTH Council Europe 2025"
+    },
+    {
+      "slide_number": 4,
+      "template": "data_story",
+      "action_title": "Starlink Lite在3国达到平价：SV=Tigo，IE<eir Y2",
+      "subtitle": "价格",
+      "density_label": "medium",
+      "chart": {
+        "type": "bar",
+        "data_type": "currency_usd",
+        "categories": [
+          "萨尔瓦多",
+          "爱尔兰",
+          "乌拉圭",
+          "意大利",
+          "法国",
+          "智利"
+        ],
+        "series": [
+          {
+            "name": "Starlink Lite",
+            "values": [
+              35,
+              32,
+              40,
+              32,
+              32,
+              36
+            ]
+          },
+          {
+            "name": "最便宜运营商",
+            "values": [
+              35,
+              33,
+              35,
+              22,
+              20,
+              12
+            ]
+          }
+        ],
+        "y_axis_title": "月费(USD)"
+      },
+      "insight": "• 萨尔瓦多完全平价($35=$35)\n• 爱尔兰eir Y2涨到€76，Starlink反而便宜\n• 智利最便宜光纤仅$12/600M\n• 法国Free €20远低于Starlink €32",
+      "source": "14国108条套餐, StarlinkInsider"
+    },
+    {
+      "slide_number": 5,
+      "template": "data_story",
+      "action_title": "5种定价模式决定防御力：不涨价最强",
+      "subtitle": "定价模式",
+      "density_label": "medium",
+      "chart": {
+        "type": "bar",
+        "data_type": "score",
+        "categories": [
+          "永不涨价",
+          "多年保价",
+          "Y1/Y2跳涨",
+          "固定无合约",
+          "国企覆盖"
+        ],
+        "series": [
+          {
+            "name": "防御评分",
+            "values": [
+              9,
+              8,
+              3,
+              6,
+              9
+            ]
+          }
+        ],
+        "y_axis_title": "防御评分(1-10)"
+      },
+      "insight": "• Y1/Y2跳涨反而帮Starlink获客\n• eir: €30→€76，用户被推向Starlink\n• Iliad永不涨价=最强防御\n• 运营商应立即学习锁价策略",
+      "source": "14国运营商定价分析"
+    },
+    {
+      "slide_number": 6,
+      "template": "data_story",
+      "action_title": "6大防御战略可降低渗透率40-60%",
+      "subtitle": "防御",
+      "density_label": "medium",
+      "chart": {
+        "type": "bar",
+        "data_type": "score",
+        "categories": [
+          "加速FTTH",
+          "FWA 5G",
+          "固定价格",
+          "农村套餐",
+          "捆绑增值",
+          "政府合作"
+        ],
+        "series": [
+          {
+            "name": "预期影响",
+            "values": [
+              9,
+              8,
+              7,
+              7,
+              5,
+              6
+            ]
+          },
+          {
+            "name": "实施难度",
+            "values": [
+              8,
+              6,
+              3,
+              4,
+              3,
+              7
+            ]
+          }
+        ],
+        "y_axis_title": "评分(1-10)"
+      },
+      "insight": "• 固定价格ROI最高(影响7/难度3)\n• 零投资即可执行\n• 加速FTTH影响最大但投资最重\n• 5G FWA是拉美最关键反击武器",
+      "source": "运营商防御策略分析"
+    },
+    {
+      "slide_number": 7,
+      "template": "recommendation",
+      "action_title": "5 recommended actions to move forward",
+      "recommendations": [
+        {
+          "number": "1",
+          "title": "加速FTTH/FWA覆盖：优先填补FTTH<10%的市场空白",
+          "detail": "加速FTTH/FWA覆盖：优先填补FTTH<10%的市场空白（危地马拉/萨尔瓦多/巴拉圭），目标3年内覆盖率提升至30%"
+        },
+        {
+          "number": "2",
+          "title": "学习Iliad不涨价模式：锁定价格消除Starlink的\"更",
+          "detail": "学习Iliad不涨价模式：锁定价格消除Starlink的\"更便宜\"叙事优势，至少提供一档\"永不涨价\"套餐"
+        },
+        {
+          "number": "3",
+          "title": "推出农村专属低价套餐：$15-20档位精准防御，与Starl",
+          "detail": "推出农村专属低价套餐：$15-20档位精准防御，与Starlink Lite直接竞争"
+        },
+        {
+          "number": "4",
+          "title": "5G FWA快速部署：拉美仅56万FWA用户，目标1年内提升",
+          "detail": "5G FWA快速部署：拉美仅56万FWA用户，目标1年内提升至200万"
+        },
+        {
+          "number": "5",
+          "title": "与政府合作数字包容计划：争取农村覆盖补贴，降低FTTH投资回",
+          "detail": "与政府合作数字包容计划：争取农村覆盖补贴，降低FTTH投资回报压力"
+        }
+      ],
+      "density_label": "medium"
+    },
+    {
+      "slide_number": 8,
+      "template": "closing",
+      "title": "Thank You",
+      "subtitle": "运营商高管 — April 2026"
+    }
+  ]
+}

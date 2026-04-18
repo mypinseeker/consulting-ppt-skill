@@ -80,36 +80,59 @@ class DeckBuilder:
     # ═══════════════════════════════════════════
 
     def add_cover(self, title: str, subtitle: str, date: str = ""):
-        """Full dark background cover slide."""
+        """Cover slide — adapts layout based on primary color luminance."""
+        from .design_system import is_dark
         slide = self._blank()
-        bg = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, SLIDE_W, SLIDE_H)
-        bg.fill.solid(); bg.fill.fore_color.rgb = self.brand.primary; bg.line.fill.background()
+
+        # 判断 primary 是否适合做全屏背景（深色可以，亮色/鲜艳色不行）
+        use_dark_bg = is_dark(self.brand.primary)
+
+        if use_dark_bg:
+            # 深色 primary（如麦肯锡蓝）→ 全屏深色背景 + 白色文字
+            bg = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, SLIDE_W, SLIDE_H)
+            bg.fill.solid(); bg.fill.fore_color.rgb = self.brand.primary; bg.line.fill.background()
+            title_color = self.brand.white
+            sub_color = self.brand.tint_30
+            date_color = self.brand.mid_gray
+        else:
+            # 亮色 primary（如华为红）→ 白色背景 + primary 做左侧强调条
+            bg = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, SLIDE_W, SLIDE_H)
+            bg.fill.solid(); bg.fill.fore_color.rgb = self.brand.white; bg.line.fill.background()
+            # 左侧粗强调条
+            left_bar = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, Inches(0.4), SLIDE_H)
+            left_bar.fill.solid(); left_bar.fill.fore_color.rgb = self.brand.primary; left_bar.line.fill.background()
+            # 底部横条
+            bottom_bar = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, Inches(6.8), SLIDE_W, Inches(0.7))
+            bottom_bar.fill.solid(); bottom_bar.fill.fore_color.rgb = self.brand.primary; bottom_bar.line.fill.background()
+            title_color = self.brand.charcoal
+            sub_color = self.brand.primary
+            date_color = self.brand.mid_gray
 
         # Accent stripe
-        s = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(0.8), Inches(2.8), Inches(1.5), Inches(0.06))
-        s.fill.solid(); s.fill.fore_color.rgb = self.brand.accent; s.line.fill.background()
+        stripe_y = Inches(2.8)
+        s = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(0.8), stripe_y, Inches(2.0), Inches(0.05))
+        s.fill.solid(); s.fill.fore_color.rgb = self.brand.accent if use_dark_bg else self.brand.primary
+        s.line.fill.background()
 
         # Title
-        tx = slide.shapes.add_textbox(Inches(0.8), Inches(3.0), Inches(10), Inches(1.5))
+        tx = slide.shapes.add_textbox(Inches(0.8), Inches(3.0), Inches(10), Inches(1.2))
         tf = tx.text_frame; tf.word_wrap = True
         p = tf.paragraphs[0]
         p.text = title; p.font.size = FONT['cover_title']; p.font.bold = True
-        p.font.color.rgb = self.brand.white; p.font.name = self.brand.font_family
+        p.font.color.rgb = title_color; p.font.name = self.brand.font_family
 
-        p2 = tf.add_paragraph()
+        # Subtitle (separate textbox for better control)
+        tx2 = slide.shapes.add_textbox(Inches(0.8), Inches(4.5), Inches(10), Inches(0.8))
+        tf2 = tx2.text_frame; tf2.word_wrap = True
+        p2 = tf2.paragraphs[0]
         p2.text = subtitle; p2.font.size = FONT['cover_sub']
-        p2.font.color.rgb = self.brand.secondary; p2.font.name = self.brand.font_family
-        p2.space_before = Pt(12)
+        p2.font.color.rgb = sub_color; p2.font.name = self.brand.font_family
 
         if date:
-            tx2 = slide.shapes.add_textbox(Inches(0.8), Inches(5.5), Inches(10), Inches(0.5))
-            p3 = tx2.text_frame.paragraphs[0]
+            tx3 = slide.shapes.add_textbox(Inches(0.8), Inches(5.8), Inches(10), Inches(0.5))
+            p3 = tx3.text_frame.paragraphs[0]
             p3.text = f"{date}  |  CONFIDENTIAL"; p3.font.size = Pt(11)
-            p3.font.color.rgb = self.brand.mid_gray; p3.font.name = self.brand.font_family
-
-        # Right vertical stripe
-        vs = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(12.5), 0, Inches(0.06), SLIDE_H)
-        vs.fill.solid(); vs.fill.fore_color.rgb = self.brand.secondary; vs.line.fill.background()
+            p3.font.color.rgb = date_color; p3.font.name = self.brand.font_family
         return slide
 
     def add_section_divider(self, title: str, number: str = None):
@@ -134,51 +157,77 @@ class DeckBuilder:
         return slide
 
     def add_closing(self, title: str = "Thank You", subtitle: str = ""):
-        """Closing slide."""
+        """Closing slide — adapts to primary color luminance."""
+        from .design_system import is_dark
         slide = self._blank()
-        bg = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, SLIDE_W, SLIDE_H)
-        bg.fill.solid(); bg.fill.fore_color.rgb = self.brand.primary; bg.line.fill.background()
+        use_dark_bg = is_dark(self.brand.primary)
+
+        if use_dark_bg:
+            bg = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, SLIDE_W, SLIDE_H)
+            bg.fill.solid(); bg.fill.fore_color.rgb = self.brand.primary; bg.line.fill.background()
+            title_color = self.brand.white
+            sub_color = self.brand.tint_30
+        else:
+            bg = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, 0, SLIDE_W, SLIDE_H)
+            bg.fill.solid(); bg.fill.fore_color.rgb = self.brand.white; bg.line.fill.background()
+            # 底部彩色条
+            btm = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, 0, Inches(6.5), SLIDE_W, Inches(1.0))
+            btm.fill.solid(); btm.fill.fore_color.rgb = self.brand.primary; btm.line.fill.background()
+            title_color = self.brand.charcoal
+            sub_color = self.brand.primary
 
         s = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(4.5), Inches(2.5), Inches(4.0), Inches(0.05))
-        s.fill.solid(); s.fill.fore_color.rgb = self.brand.accent; s.line.fill.background()
+        s.fill.solid(); s.fill.fore_color.rgb = self.brand.accent if use_dark_bg else self.brand.primary
+        s.line.fill.background()
 
         tx = slide.shapes.add_textbox(Inches(2), Inches(2.8), Inches(9), Inches(1.5))
         p = tx.text_frame.paragraphs[0]
         p.text = title; p.font.size = FONT['closing']; p.font.bold = True
-        p.font.color.rgb = self.brand.white; p.font.name = self.brand.font_family
+        p.font.color.rgb = title_color; p.font.name = self.brand.font_family
         p.alignment = PP_ALIGN.CENTER
 
         if subtitle:
             tx2 = slide.shapes.add_textbox(Inches(2), Inches(4.0), Inches(9), Inches(1.0))
             p2 = tx2.text_frame.paragraphs[0]
             p2.text = subtitle; p2.font.size = Pt(14)
-            p2.font.color.rgb = self.brand.secondary; p2.font.name = self.brand.font_family
+            p2.font.color.rgb = sub_color; p2.font.name = self.brand.font_family
             p2.alignment = PP_ALIGN.CENTER
         return slide
 
     def add_kpi_box(self, slide, value: str, label: str,
-                    left, top, width=Inches(2.8), height=Inches(1.4),
+                    left, top, width=Inches(2.8), height=Inches(1.8),
                     value_color=None, bg_color=None):
-        """Large KPI metric box."""
+        """KPI card — 顶部彩色条 + 白底 + 大数字 + 标签"""
         bg_color = bg_color or self.brand.primary
-        value_color = value_color or self.brand.text_on(bg_color)
 
+        # 白底卡片 + 灰色边框
         box = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, left, top, width, height)
-        box.fill.solid(); box.fill.fore_color.rgb = bg_color; box.line.fill.background()
+        box.fill.solid(); box.fill.fore_color.rgb = self.brand.white
+        box.line.color.rgb = self.brand.light_gray; box.line.width = Pt(1)
 
-        tf = box.text_frame; tf.word_wrap = True; tf.vertical_anchor = MSO_ANCHOR.MIDDLE
-        p1 = tf.paragraphs[0]
-        # 中文 KPI 值用较小字号避免溢出
+        # 顶部彩色强调条
+        bar = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, left, top, width, Inches(0.12))
+        bar.fill.solid(); bar.fill.fore_color.rgb = bg_color; bar.line.fill.background()
+
+        # KPI 值（大号，品牌色）
         cn_count = sum(1 for c in value if ord(c) > 127)
-        kpi_font_size = Pt(28) if cn_count > 0 and len(value) > 4 else FONT['kpi_value']
-        p1.text = value; p1.font.size = kpi_font_size; p1.font.bold = True
-        p1.font.color.rgb = value_color; p1.font.name = self.brand.font_family
-        p1.alignment = PP_ALIGN.CENTER
+        kpi_font_size = Pt(24) if cn_count > 0 and len(value) > 4 else Pt(32)
 
-        p2 = tf.add_paragraph()
-        p2.text = label; p2.font.size = FONT['kpi_label']
-        p2.font.color.rgb = self.brand.label_on(bg_color)
-        p2.font.name = self.brand.font_family; p2.alignment = PP_ALIGN.CENTER
+        val_tx = slide.shapes.add_textbox(left + Inches(0.15), top + Inches(0.25),
+                                           width - Inches(0.3), Inches(0.6))
+        vp = val_tx.text_frame.paragraphs[0]
+        vp.text = value; vp.font.size = kpi_font_size; vp.font.bold = True
+        vp.font.color.rgb = bg_color; vp.font.name = self.brand.font_family
+        vp.alignment = PP_ALIGN.CENTER
+
+        # 标签（小号，深灰，可多行）
+        lbl_tx = slide.shapes.add_textbox(left + Inches(0.15), top + Inches(0.9),
+                                           width - Inches(0.3), height - Inches(1.1))
+        lbl_tx.text_frame.word_wrap = True
+        lp = lbl_tx.text_frame.paragraphs[0]
+        lp.text = label; lp.font.size = Pt(10)
+        lp.font.color.rgb = self.brand.charcoal; lp.font.name = self.brand.font_family
+        lp.alignment = PP_ALIGN.CENTER
         return box
 
     def add_kpi_slide(self, title: str, kpis: list, subtitle: str = None,
@@ -210,26 +259,35 @@ class DeckBuilder:
         return slide
 
     def add_insight_box(self, slide, text: str, left, top,
-                        width=Inches(3.5), height=Inches(1.2)):
-        """McKinsey-style insight callout box with label bar."""
+                        width=Inches(4.5), height=Inches(4.2)):
+        """Insight panel — 左侧彩色边 + 白底 + 标题 + 多行内容"""
+        from .design_system import is_dark
+
+        # 白底面板
         box = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, left, top, width, height)
-        box.fill.solid(); box.fill.fore_color.rgb = self.brand.tint_05
-        box.line.color.rgb = self.brand.secondary; box.line.width = Pt(1.5)
+        box.fill.solid(); box.fill.fore_color.rgb = self.brand.light_gray
+        box.line.color.rgb = self.brand.mid_gray; box.line.width = Pt(0.5)
 
-        label = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, left, top, width, Inches(0.28))
-        label.fill.solid(); label.fill.fore_color.rgb = self.brand.primary
-        label.line.fill.background()
-        lp = label.text_frame.paragraphs[0]
-        lp.text = "KEY INSIGHT"; lp.font.size = Pt(8); lp.font.bold = True
-        lp.font.color.rgb = self.brand.accent; lp.font.name = self.brand.font_family
-        lp.alignment = PP_ALIGN.CENTER; label.text_frame.vertical_anchor = MSO_ANCHOR.MIDDLE
+        # 左侧彩色强调条
+        bar = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, left, top, Inches(0.12), height)
+        bar.fill.solid(); bar.fill.fore_color.rgb = self.brand.primary; bar.line.fill.background()
 
-        ctf = slide.shapes.add_textbox(left + Inches(0.15), top + Inches(0.35),
-                                       width - Inches(0.3), height - Inches(0.45))
+        # 标题 "KEY INSIGHT"
+        title_h = Inches(0.35)
+        ttl = slide.shapes.add_textbox(left + Inches(0.25), top + Inches(0.1),
+                                        width - Inches(0.4), title_h)
+        tp = ttl.text_frame.paragraphs[0]
+        tp.text = "KEY INSIGHT"; tp.font.size = Pt(9); tp.font.bold = True
+        tp.font.color.rgb = self.brand.primary; tp.font.name = self.brand.font_family
+
+        # 内容（支持多行，自动换行）
+        ctf = slide.shapes.add_textbox(left + Inches(0.25), top + Inches(0.45),
+                                       width - Inches(0.4), height - Inches(0.6))
         ctf.text_frame.word_wrap = True
         p = ctf.text_frame.paragraphs[0]
         p.text = text; p.font.size = Pt(10)
         p.font.color.rgb = self.brand.charcoal; p.font.name = self.brand.font_family
+        p.space_after = Pt(6)
         return box
 
     def add_chart_slide(self, title: str, chart_type: str,
@@ -246,10 +304,10 @@ class DeckBuilder:
         slide = self._blank()
         self._action_title(slide, title, subtitle)
 
-        chart_w = Inches(7.5) if insight else Inches(11.5)
-        chart_h = Inches(4.5)
+        chart_w = Inches(7.0) if insight else Inches(11.5)
+        chart_h = Inches(4.2)
         chart_left = Inches(0.8)
-        chart_top = Inches(1.5)
+        chart_top = Inches(1.6)
 
         chart_data = CategoryChartData()
         chart_data.categories = categories
@@ -299,7 +357,7 @@ class DeckBuilder:
 
         if insight:
             self.add_insight_box(slide, insight,
-                                 Inches(8.8), Inches(1.8), Inches(4.0), Inches(2.0))
+                                 Inches(8.3), Inches(1.6), Inches(4.5), Inches(4.2))
 
         if source:
             self._add_source(slide, source)
@@ -386,15 +444,24 @@ class DeckBuilder:
             tp.text = rec_title; tp.font.size = Pt(14); tp.font.bold = True
             tp.font.color.rgb = colors[i % len(colors)]; tp.font.name = self.brand.font_family
 
-            # Description box
+            # Description card — 白底+边框+更多空间
+            card_h = Inches(2.5) if row == 0 else Inches(2.0)
             desc_box = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, x, y + Inches(0.6),
-                                               card_w, Inches(1.8))
-            desc_box.fill.solid(); desc_box.fill.fore_color.rgb = self.brand.light_gray
-            desc_box.line.fill.background(); desc_box.text_frame.word_wrap = True
-            dp = desc_box.text_frame.paragraphs[0]
+                                               card_w, card_h)
+            desc_box.fill.solid(); desc_box.fill.fore_color.rgb = self.brand.white
+            desc_box.line.color.rgb = self.brand.light_gray; desc_box.line.width = Pt(1)
+            # 顶部彩色条
+            card_bar = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, x, y + Inches(0.6),
+                                              card_w, Inches(0.08))
+            card_bar.fill.solid(); card_bar.fill.fore_color.rgb = colors[i % len(colors)]
+            card_bar.line.fill.background()
+            # 文字
+            desc_tx = slide.shapes.add_textbox(x + Inches(0.15), y + Inches(0.8),
+                                                card_w - Inches(0.3), card_h - Inches(0.3))
+            desc_tx.text_frame.word_wrap = True
+            dp = desc_tx.text_frame.paragraphs[0]
             dp.text = desc; dp.font.size = Pt(10)
             dp.font.color.rgb = self.brand.charcoal; dp.font.name = self.brand.font_family
-            desc_box.text_frame.vertical_anchor = MSO_ANCHOR.MIDDLE
         return slide
 
     def save(self, path: str):

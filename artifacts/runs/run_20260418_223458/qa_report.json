@@ -1,0 +1,8 @@
+{
+  "total_slides": 8,
+  "critical_count": 0,
+  "warning_count": 1,
+  "checks": [
+    "Slide 7: 29 shapes (possibly cluttered)"
+  ]
+}

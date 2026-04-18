@@ -107,12 +107,16 @@ pptx_path = orc.run_from_plan("path/to/plan.json")
 - Charts: `$#,##0.0"M"` or `#,##0"%"` — never bare numbers
 - Tables: column headers include unit `($M)`, `(%)`, `(months)`
 
-### Rule 4: Contrast Ratio >= 3:1
+### Rule 4: Contrast Ratio >= 3:1 + Color-Adaptive Layout
 - Dark background → WHITE text
 - Light background → CHARCOAL text
-- **Never**: yellow on blue, gray on red, blue on blue
+- **Never**: yellow on blue, gray on red, red on red
+- **Cover/Closing 自适应**: primary 是亮色（红/橙/黄）→ 白底+品牌色做强调条
+  primary 是深色（深蓝/深灰/黑）→ 全屏深色背景+白色文字
+- **KPI 卡片**: 白底+顶部彩色条+品牌色数字（不再用品牌色做满底）
+- **Insight 面板**: 白底/浅灰底+左侧彩色边+多行内容（不是小色块+一句话）
 
-### Rule 5: Charts Occupy 60-70% of Slide
+### Rule 5: Charts Occupy 50-60% + Insight Panel 40%
 - Data labels on every bar/point
 - One chart per slide (two max for comparison)
 
@@ -144,7 +148,14 @@ pptx_path = orc.run_from_plan("path/to/plan.json")
 - low-density pages: max 3 content items
 - Density is CONTRACT, not suggestion — Gate blocks violations
 
-### Rule 10: Failure Handling
+### Rule 10: Information Density Per Slide
+- Data Story 页必须有图表(50-60%) + Insight面板(40%)，不能只放一个图+一句话
+- Insight 面板用要点列表（3-5 个 bullet），不是一句话总结
+- KPI 页每个卡片包含：大数字 + 标签 + 简述（三层信息）
+- Recommendation 卡片包含：编号 + 标题 + 2-3 句详细描述（不是一句话）
+- 封面不能信息过密，但内容页不能信息过稀
+
+### Rule 11: Failure Handling
 - Gate failure → retry (max 2) → blocked (return None, no crash)
 - Never `raise ValueError` on Gate failure
 - Blocked stages save state for `RunManager.resume()` recovery
