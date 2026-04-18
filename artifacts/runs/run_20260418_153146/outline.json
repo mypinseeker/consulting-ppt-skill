@@ -1,0 +1,34 @@
+{
+  "top_conclusion": "Switching vendors costs 22-57% more than staying across all 4 scenarios",
+  "arguments": [
+    {
+      "title": "Migration and multi-vendor costs dominate the switching premium",
+      "slides": [
+        3,
+        4
+      ],
+      "evidence": [
+        "TCO Model Q1 2026"
+      ]
+    },
+    {
+      "title": "Stay scenario delivers 16 months faster 5G rollout",
+      "slides": [
+        5
+      ],
+      "evidence": [
+        "Vendor deployment commitments"
+      ]
+    },
+    {
+      "title": "Three actions capture value without switching risk",
+      "slides": [
+        6,
+        7
+      ],
+      "evidence": [
+        "Negotiation playbook"
+      ]
+    }
+  ]
+}

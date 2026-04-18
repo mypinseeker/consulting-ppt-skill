@@ -1,0 +1,12 @@
+{
+  "audience": "CTO + Board",
+  "core_question": "Should we switch RAN vendors or stay?",
+  "hypothesis": "Staying is 22-57% cheaper than switching",
+  "key_arguments": [
+    "Migration cost dominance",
+    "Timeline delay",
+    "Vendor leverage"
+  ],
+  "page_count": "8-12",
+  "format": "PPTX"
+}
