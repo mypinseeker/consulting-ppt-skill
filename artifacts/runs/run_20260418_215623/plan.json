@@ -1,0 +1,146 @@
+{
+  "metadata": {
+    "title": "Starlink 威胁与防御",
+    "date": "April 2026",
+    "brand": {
+      "primary": "#CF0A2C",
+      "secondary": "#333333",
+      "accent": "#FFD100"
+    },
+    "total_slides": 6,
+    "generated_by": "consulting-ppt-skill v2.0"
+  },
+  "slides": [
+    {
+      "slide_number": 1,
+      "template": "cover",
+      "title": "Starlink 威胁与防御",
+      "subtitle": "Starlink在拉美威胁极大，3国已平价，需6大防御策略",
+      "date": "April 2026"
+    },
+    {
+      "slide_number": 2,
+      "template": "executive_summary",
+      "action_title": "Starlink在拉美威胁极大，3国已平价，需6大防御策略",
+      "subtitle": "Key findings summary",
+      "kpis": [
+        {
+          "value": "14国",
+          "label": "覆盖市场",
+          "detail": ""
+        },
+        {
+          "value": "+1144%",
+          "label": "最高增长",
+          "detail": ""
+        }
+      ],
+      "density_label": "medium"
+    },
+    {
+      "slide_number": 3,
+      "template": "data_story",
+      "action_title": "FTTH覆盖缺口决定威胁：渗透率<10%市场增长超100%",
+      "subtitle": "增长对比",
+      "density_label": "medium",
+      "chart": {
+        "type": "bar",
+        "data_type": "percentage",
+        "categories": [
+          "玻利维亚",
+          "危地马拉",
+          "萨尔瓦多",
+          "哥伦比亚",
+          "法国"
+        ],
+        "series": [
+          {
+            "name": "YoY增长(%)",
+            "values": [
+              1144,
+              125,
+              89,
+              72,
+              20
+            ]
+          }
+        ],
+        "y_axis_title": "YoY增长率(%)"
+      },
+      "insight": "FTTH<10%市场Starlink增长均超80%",
+      "source": "StarlinkInsider 2024-2025"
+    },
+    {
+      "slide_number": 4,
+      "template": "data_story",
+      "action_title": "Starlink Lite在3国达到平价",
+      "subtitle": "价格对比",
+      "density_label": "medium",
+      "chart": {
+        "type": "bar",
+        "data_type": "currency_usd",
+        "categories": [
+          "萨尔瓦多",
+          "爱尔兰",
+          "意大利",
+          "法国",
+          "智利"
+        ],
+        "series": [
+          {
+            "name": "Starlink Lite",
+            "values": [
+              35,
+              32,
+              32,
+              32,
+              36
+            ]
+          },
+          {
+            "name": "最便宜运营商",
+            "values": [
+              35,
+              33,
+              22,
+              20,
+              12
+            ]
+          }
+        ],
+        "y_axis_title": "月费(USD)"
+      },
+      "insight": "萨尔瓦多完全平价",
+      "source": "14国108条套餐数据"
+    },
+    {
+      "slide_number": 5,
+      "template": "recommendation",
+      "action_title": "3 recommended actions to move forward",
+      "recommendations": [
+        {
+          "number": "1",
+          "title": "加速FTTH覆盖",
+          "detail": "加速FTTH覆盖"
+        },
+        {
+          "number": "2",
+          "title": "学习Iliad不涨价",
+          "detail": "学习Iliad不涨价"
+        },
+        {
+          "number": "3",
+          "title": "农村专属套餐",
+          "detail": "农村专属套餐"
+        }
+      ],
+      "density_label": "medium"
+    },
+    {
+      "slide_number": 6,
+      "template": "closing",
+      "title": "Thank You",
+      "subtitle": "运营商高管 — April 2026"
+    }
+  ]
+}
