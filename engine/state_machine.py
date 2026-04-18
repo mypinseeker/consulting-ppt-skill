@@ -105,6 +105,37 @@ def gate_confirm(run_dir: Path) -> GateResult:
     return GateResult(True)
 
 
+def gate_research(run_dir: Path) -> GateResult:
+    """Gate 2→3: Research quality check (optional stage)"""
+    path = run_dir / STAGE_ARTIFACTS[Stage.RESEARCH]
+    if not path.exists():
+        # Research is optional — if skipped, pass
+        return GateResult(True)
+
+    data = json.loads(path.read_text())
+
+    # If explicitly skipped
+    if data.get("skipped"):
+        return GateResult(True)
+
+    errors = []
+
+    # Check search quality
+    quality = data.get("search_quality", "unknown")
+    if quality == "low":
+        errors.append(
+            f"搜索质量标记为 'low'。建议：扩大搜索范围或让用户提供更多数据。"
+            f"设置 search_quality='medium' 或 'high' 后重试。"
+        )
+
+    # Check data sources count
+    sources = data.get("sources", [])
+    if len(sources) < 2 and quality != "high":
+        errors.append(f"仅找到 {len(sources)} 个数据源（建议 ≥2）")
+
+    return GateResult(len(errors) == 0, errors)
+
+
 def gate_outline(run_dir: Path) -> GateResult:
     """Gate 3→4: 大纲必须符合 Pyramid Principle"""
     path = run_dir / STAGE_ARTIFACTS[Stage.OUTLINE]
@@ -177,6 +208,7 @@ def gate_qa(run_dir: Path) -> GateResult:
 GATES = {
     Stage.INTERVIEW:  gate_interview,
     Stage.CONFIRM:    gate_confirm,
+    Stage.RESEARCH:   gate_research,
     Stage.OUTLINE:    gate_outline,
     Stage.STYLE_LOCK: gate_style,
     Stage.GENERATE:   gate_generate,
@@ -293,6 +325,32 @@ class RunManager:
         print(f"  {icon} Gate {stage.name}: {result}")
         return result
 
+    def get_incomplete_pages(self) -> list:
+        """Scan plan.json and check which pages have been rendered.
+        Returns list of slide_numbers that need (re-)rendering."""
+        plan_path = self.run_dir / "plan.json"
+        if not plan_path.exists():
+            return []
+
+        plan = json.loads(plan_path.read_text())
+        slides = plan.get("slides", [])
+
+        incomplete = []
+        for slide in slides:
+            sn = slide.get("slide_number", 0)
+            # Check if this page has been individually rendered
+            # (for future per-page rendering support)
+            page_marker = self.run_dir / f"slide_{sn}_done.marker"
+            if not page_marker.exists():
+                incomplete.append(sn)
+
+        return incomplete
+
+    def mark_page_done(self, slide_number: int):
+        """Mark a page as successfully rendered."""
+        marker = self.run_dir / f"slide_{slide_number}_done.marker"
+        marker.write_text(f"done:{slide_number}")
+
     def status(self) -> str:
         """打印运行状态"""
         lines = [f"📋 Run: {self.run_id}"]
@@ -302,6 +360,18 @@ class RunManager:
             icon = "✅" if exists else "⬜"
             marker = " ← 当前" if stage == self.current_stage and not exists else ""
             lines.append(f"  {icon} {stage.name:12s}  {artifact}{marker}")
+
+        # Show per-page status if plan exists
+        plan_path = self.run_dir / "plan.json"
+        if plan_path.exists():
+            plan = json.loads(plan_path.read_text())
+            n_slides = len(plan.get("slides", []))
+            incomplete = self.get_incomplete_pages()
+            if incomplete:
+                lines.append(f"\n  📄 Pages: {n_slides - len(incomplete)}/{n_slides} rendered")
+            else:
+                lines.append(f"\n  📄 Pages: {n_slides}/{n_slides} all rendered")
+
         return "\n".join(lines)
 
 
