@@ -1,0 +1,113 @@
+{
+  "metadata": {
+    "title": "RAN TCO Analysis — Stay vs Switch",
+    "client": "Telco Corp",
+    "author": "Strategy Team",
+    "date": "2026-04-18",
+    "brand": {
+      "primary": "#00377B",
+      "secondary": "#009FDB",
+      "accent": "#FFD100"
+    },
+    "total_slides": 6
+  },
+  "slides": [
+    {
+      "slide_number": 1,
+      "template": "cover",
+      "title": "RAN TCO Analysis",
+      "subtitle": "5-Year Stay vs Switch Model — 4 Deployment Scenarios",
+      "date": "April 2026"
+    },
+    {
+      "slide_number": 2,
+      "template": "executive_summary",
+      "action_title": "Switching vendors costs 22-57% more than staying across all scenarios",
+      "subtitle": "5-Year TCO comparison, NPV basis",
+      "kpis": [
+        {"value": "+57%", "label": "S1: Bogota", "detail": "$54.0M delta"},
+        {"value": "+47%", "label": "S2: 3-Region", "detail": "$62.1M delta"},
+        {"value": "+22%", "label": "S3: Full Network", "detail": "$106.0M delta"}
+      ],
+      "key_message": "The switching premium is driven by migration costs and multi-vendor complexity, not hardware pricing differences.",
+      "density_label": "medium",
+      "source": "Internal TCO Model, 2026"
+    },
+    {
+      "slide_number": 3,
+      "template": "data_story",
+      "action_title": "Migration and multi-vendor costs dominate the switching premium in all scenarios",
+      "subtitle": "Cost breakdown by category ($M, 5-year NPV)",
+      "chart": {
+        "type": "stacked_bar",
+        "categories": ["S1: Bogota", "S2: 3-Region", "S3: Full", "S4: National"],
+        "series": [
+          {"name": "Hardware", "values": [45.2, 62.1, 180.0, 288.0]},
+          {"name": "Migration", "values": [22.9, 31.6, 110.0, 176.0]},
+          {"name": "Multi-vendor", "values": [18.5, 24.2, 65.0, 104.0]},
+          {"name": "Maintenance", "values": [8.4, 12.3, 35.0, 56.0]}
+        ],
+        "y_axis_title": "Cost ($M)",
+        "show_data_labels": true
+      },
+      "insight": "Migration alone accounts for 35-40% of the total switching cost",
+      "density_label": "high",
+      "source": "Internal TCO Model, vendor quotes Q1 2026"
+    },
+    {
+      "slide_number": 4,
+      "template": "comparison",
+      "action_title": "Stay scenario delivers 16 months faster 5G rollout than any switch scenario",
+      "subtitle": "Timeline comparison: Stay vs Switch deployment",
+      "left": {
+        "label": "Stay (Current Vendor)",
+        "points": [
+          "5G rollout starts Q3 2026",
+          "Full coverage by Q2 2028",
+          "No migration downtime",
+          "Existing team expertise"
+        ]
+      },
+      "right": {
+        "label": "Switch (New Vendor)",
+        "points": [
+          "5G rollout starts Q1 2028",
+          "Full coverage by Q4 2029",
+          "6-month migration window",
+          "Retraining required"
+        ]
+      },
+      "density_label": "medium",
+      "source": "Vendor deployment commitments, March 2026"
+    },
+    {
+      "slide_number": 5,
+      "template": "recommendation",
+      "action_title": "Three actions to capture value without switching risk",
+      "recommendations": [
+        {
+          "number": "1",
+          "title": "STAY & NEGOTIATE",
+          "detail": "Leverage RFP pressure for 10-15% better pricing from current vendor. Expected savings: $12-18M over 5 years."
+        },
+        {
+          "number": "2",
+          "title": "MODERNIZE IN PLACE",
+          "detail": "Use negotiated savings to fund 5G acceleration. Target: 6-month faster rollout vs current plan."
+        },
+        {
+          "number": "3",
+          "title": "STRATEGIC RESERVE",
+          "detail": "Maintain vendor diversification option for future RAN cycles. Keep secondary vendor qualified but not deployed."
+        }
+      ],
+      "density_label": "medium"
+    },
+    {
+      "slide_number": 6,
+      "template": "closing",
+      "title": "Thank You",
+      "subtitle": "Strategy Team — April 2026"
+    }
+  ]
+}
