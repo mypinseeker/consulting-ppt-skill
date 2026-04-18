@@ -86,12 +86,13 @@ class Orchestrator:
     # ================================================================
     # 入口 1：从采访开始（完整流程）
     # ================================================================
-    def run_from_interview(self, interview: dict) -> str:
+    def run_from_interview(self, interview: dict, manual_audit: bool = False) -> str:
         """
         从采访答案开始，自动走完全流程。
 
         Args:
             interview: 麦肯锡 10 问的回答（dict）
+            manual_audit: 如果为 True，在 QA 阶段后暂停以供人工审核
 
         Returns:
             输出 PPTX 路径
@@ -150,7 +151,7 @@ class Orchestrator:
                 return None
 
         # P5: 渲染 + QA
-        output_path = self._render_and_qa(plan)
+        output_path = self._render_and_qa(plan, manual_audit=manual_audit)
 
         print(f"\n{'='*60}")
         print(f"✅ 全流程完成!")
@@ -422,11 +423,20 @@ class Orchestrator:
         }
         return plan
 
-    def _render_and_qa(self, plan: dict) -> str:
+    def _render_and_qa(self, plan: dict, manual_audit: bool = False) -> str:
         """渲染 PPTX + 简单 QA"""
         # 写临时 plan.json
         plan_path = self.run.run_dir / "plan.json"
         plan_path.write_text(json.dumps(plan, indent=2, ensure_ascii=False))
+
+        # Self-review (double validation)
+        from .planning_schema import self_review_plan
+        self_issues = self_review_plan(str(plan_path))
+        if self_issues:
+            print(f"  📝 Self-review: {len(self_issues)} 问题")
+            for issue in self_issues:
+                icon = {"CRITICAL": "🔴", "WARNING": "🟡", "INFO": "🔵"}[issue.severity]
+                print(f"     {icon} {issue}")
 
         # 渲染
         output_path = str(self.run.run_dir / "deck.pptx")
@@ -436,6 +446,21 @@ class Orchestrator:
         except Exception as e:
             print(f"  ❌ 渲染失败: {e}")
             return None
+
+        # Manual audit checkpoint
+        if manual_audit:
+            from pptx import Presentation as PptxPres
+            prs = PptxPres(output_path)
+            print(f"\n📋 Manual Audit — {len(prs.slides)} 页待审核:")
+            for i, slide in enumerate(prs.slides):
+                txt = ""
+                for s in slide.shapes:
+                    if hasattr(s, 'text') and len(s.text) > 10:
+                        txt = s.text.split(chr(10))[0][:60]
+                        break
+                print(f"  Page {i+1}: {txt}")
+            print(f"\n⏸️ 人工审核点：请检查 {output_path}")
+            print(f"  如需修改，编辑 plan.json 后重新运行")
 
         # 简单 QA
         from pptx import Presentation

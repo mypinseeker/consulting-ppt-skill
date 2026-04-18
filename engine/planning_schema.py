@@ -414,6 +414,64 @@ def validate_and_report(plan_path: str) -> bool:
     return passed
 
 
+def self_review_plan(plan_path: str) -> List[ValidationError]:
+    """
+    Self-review: 渲染前的二次校验（生成者视角）。
+    检查 validate_plan 不覆盖的语义问题。
+    """
+    errors = []
+    path = Path(plan_path)
+    if not path.exists():
+        return errors
+
+    plan = json.loads(path.read_text())
+    slides = plan.get("slides", [])
+
+    # 1. 叙事连贯性：相邻页标题不应重复关键词超过 50%
+    prev_title = ""
+    for slide in slides:
+        title = slide.get("action_title", "")
+        if title and prev_title:
+            words_curr = set(title.lower().split())
+            words_prev = set(prev_title.lower().split())
+            stopwords = {"the", "a", "an", "is", "are", "and", "or", "of", "in", "to",
+                         "的", "是", "在", "和", "与"}
+            words_curr -= stopwords
+            words_prev -= stopwords
+            if words_curr and words_prev:
+                overlap = len(words_curr & words_prev) / min(len(words_curr), len(words_prev))
+                if overlap > 0.6:
+                    errors.append(ValidationError(
+                        slide.get("slide_number", 0), "narrative",
+                        "WARNING",
+                        f"相邻页标题重复度 {overlap:.0%}：可能叙事不够递进"))
+        if title:
+            prev_title = title
+
+    # 2. 图表类型多样性：连续 3+ 页用同一图表类型
+    chart_types = []
+    for slide in slides:
+        ct = slide.get("chart", {}).get("type", "")
+        chart_types.append(ct if ct else None)
+    for i in range(len(chart_types) - 2):
+        if chart_types[i] and chart_types[i] == chart_types[i+1] == chart_types[i+2]:
+            errors.append(ValidationError(
+                i+1, "chart_variety", "INFO",
+                f"连续 3 页使用 '{chart_types[i]}' 图表，建议变换图表类型增加视觉多样性"))
+            break
+
+    # 3. 总页数合理性
+    n = len(slides)
+    if n > 15:
+        errors.append(ValidationError(0, "page_count", "WARNING",
+                      f"共 {n} 页，超过建议的 15 页上限。受众注意力有限。"))
+    elif n < 4:
+        errors.append(ValidationError(0, "page_count", "WARNING",
+                      f"共 {n} 页，内容可能不足。建议至少 5 页。"))
+
+    return errors
+
+
 # ====================================================================
 # CLI 入口
 # ====================================================================
