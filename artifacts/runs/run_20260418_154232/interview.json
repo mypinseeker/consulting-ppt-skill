@@ -1,0 +1,20 @@
+{
+  "audience": "CTO + Board",
+  "core_question": "Should we switch RAN vendors or stay with the current one?",
+  "hypothesis": "Staying is 22-57% cheaper than switching across all 4 deployment scenarios",
+  "key_arguments": [
+    "Migration and multi-vendor costs dominate the switching premium",
+    "Stay scenario delivers 16 months faster 5G rollout",
+    "Three actions capture value without switching risk"
+  ],
+  "actions": [
+    "STAY & NEGOTIATE: Leverage RFP pressure for 10-15% better pricing",
+    "MODERNIZE: Use savings to fund 5G acceleration",
+    "STRATEGIC RESERVE: Maintain vendor diversification for future"
+  ],
+  "brand": {
+    "primary": "#00377B",
+    "secondary": "#009FDB",
+    "accent": "#FFD100"
+  }
+}

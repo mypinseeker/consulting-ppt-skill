@@ -1,0 +1,36 @@
+{
+  "top_conclusion": "Staying is 22-57% cheaper than switching across all 4 deployment scenarios",
+  "narrative_flow": "conclusion_first",
+  "arguments": [
+    {
+      "title": "Migration and multi-vendor costs dominate the switching premium",
+      "slides": [
+        {
+          "template": "data_story",
+          "focus": "Migration and multi-vendor costs dominate the switching premium"
+        }
+      ],
+      "evidence": []
+    },
+    {
+      "title": "Stay scenario delivers 16 months faster 5G rollout",
+      "slides": [
+        {
+          "template": "data_story",
+          "focus": "Stay scenario delivers 16 months faster 5G rollout"
+        }
+      ],
+      "evidence": []
+    },
+    {
+      "title": "Three actions capture value without switching risk",
+      "slides": [
+        {
+          "template": "data_story",
+          "focus": "Three actions capture value without switching risk"
+        }
+      ],
+      "evidence": []
+    }
+  ]
+}

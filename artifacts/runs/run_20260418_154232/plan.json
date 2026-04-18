@@ -1,0 +1,162 @@
+{
+  "metadata": {
+    "title": "Should we switch RAN vendors or stay with the current one?",
+    "date": "April 2026",
+    "brand": {
+      "primary": "#00377B",
+      "secondary": "#009FDB",
+      "accent": "#FFD100"
+    },
+    "total_slides": 7,
+    "generated_by": "consulting-ppt-skill v2.0"
+  },
+  "slides": [
+    {
+      "slide_number": 1,
+      "template": "cover",
+      "title": "Should we switch RAN vendors or stay with the current one?",
+      "subtitle": "Staying is 22-57% cheaper than switching across all 4 deployment scenarios",
+      "date": "April 2026"
+    },
+    {
+      "slide_number": 2,
+      "template": "executive_summary",
+      "action_title": "Staying is 22-57% cheaper than switching across all 4 deployment scenarios",
+      "subtitle": "Key findings summary",
+      "kpis": [
+        {
+          "value": "#1",
+          "label": "Migration and multi-vendor costs dominat",
+          "detail": ""
+        },
+        {
+          "value": "#2",
+          "label": "Stay scenario delivers 16 months faster ",
+          "detail": ""
+        },
+        {
+          "value": "#3",
+          "label": "Three actions capture value without swit",
+          "detail": ""
+        }
+      ],
+      "density_label": "medium"
+    },
+    {
+      "slide_number": 3,
+      "template": "data_story",
+      "action_title": "Migration and multi-vendor costs dominate the switching premium",
+      "subtitle": "Migration and multi-vendor costs dominate the switching premium",
+      "density_label": "medium",
+      "chart": {
+        "type": "bar",
+        "categories": [
+          "Category A",
+          "Category B",
+          "Category C"
+        ],
+        "series": [
+          {
+            "name": "Value",
+            "values": [
+              100,
+              150,
+              120
+            ]
+          }
+        ],
+        "y_axis_title": "Value",
+        "show_data_labels": true
+      },
+      "insight": "Key insight from: Migration and multi-vendor costs dominate the switching premium",
+      "source": "Data source to be confirmed"
+    },
+    {
+      "slide_number": 4,
+      "template": "data_story",
+      "action_title": "Stay scenario delivers 16 months faster 5G rollout",
+      "subtitle": "Stay scenario delivers 16 months faster 5G rollout",
+      "density_label": "medium",
+      "chart": {
+        "type": "bar",
+        "categories": [
+          "Category A",
+          "Category B",
+          "Category C"
+        ],
+        "series": [
+          {
+            "name": "Value",
+            "values": [
+              100,
+              150,
+              120
+            ]
+          }
+        ],
+        "y_axis_title": "Value",
+        "show_data_labels": true
+      },
+      "insight": "Key insight from: Stay scenario delivers 16 months faster 5G rollout",
+      "source": "Data source to be confirmed"
+    },
+    {
+      "slide_number": 5,
+      "template": "data_story",
+      "action_title": "Three actions capture value without switching risk",
+      "subtitle": "Three actions capture value without switching risk",
+      "density_label": "medium",
+      "chart": {
+        "type": "bar",
+        "categories": [
+          "Category A",
+          "Category B",
+          "Category C"
+        ],
+        "series": [
+          {
+            "name": "Value",
+            "values": [
+              100,
+              150,
+              120
+            ]
+          }
+        ],
+        "y_axis_title": "Value",
+        "show_data_labels": true
+      },
+      "insight": "Key insight from: Three actions capture value without switching risk",
+      "source": "Data source to be confirmed"
+    },
+    {
+      "slide_number": 6,
+      "template": "recommendation",
+      "action_title": "3 recommended actions to move forward",
+      "recommendations": [
+        {
+          "number": "1",
+          "title": "STAY & NEGOTIATE",
+          "detail": "STAY & NEGOTIATE: Leverage RFP pressure for 10-15% better pricing"
+        },
+        {
+          "number": "2",
+          "title": "MODERNIZE",
+          "detail": "MODERNIZE: Use savings to fund 5G acceleration"
+        },
+        {
+          "number": "3",
+          "title": "STRATEGIC RESERVE",
+          "detail": "STRATEGIC RESERVE: Maintain vendor diversification for future"
+        }
+      ],
+      "density_label": "medium"
+    },
+    {
+      "slide_number": 7,
+      "template": "closing",
+      "title": "Thank You",
+      "subtitle": "CTO + Board — April 2026"
+    }
+  ]
+}
