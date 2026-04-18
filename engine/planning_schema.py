@@ -122,7 +122,7 @@ PLACEHOLDER_PATTERNS = [
     r"^Key insight from:",
     r"^#\d+$",           # KPI 值 = "#1", "#2"
     r"^To be confirmed$",
-    r"^\d{2,3}$",        # 裸数字如 100, 150, 120（无单位的占位值）
+    r"^(?:100|150|120|200|250|300)$",  # 常见占位值（精确匹配）
 ]
 
 import re as _re

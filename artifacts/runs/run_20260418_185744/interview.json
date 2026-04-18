@@ -1,0 +1,222 @@
+{
+  "audience": "运营商高管 + 战略部",
+  "core_question": "Starlink 对运营商的威胁与防御策略",
+  "hypothesis": "Starlink 在拉美威胁极大，3国已平价，需6大防御策略",
+  "key_arguments": [
+    {
+      "title": "FTTH覆盖缺口决定威胁：渗透率<10%市场Starlink增长超100%",
+      "slides": [
+        {
+          "template": "data_story",
+          "focus": "FTTH vs Starlink增长",
+          "chart_data": {
+            "type": "bar",
+            "data_type": "percentage",
+            "categories": [
+              "玻利维亚",
+              "危地马拉",
+              "巴拉圭",
+              "萨尔瓦多",
+              "哥伦比亚",
+              "波兰",
+              "爱尔兰",
+              "法国"
+            ],
+            "series": [
+              {
+                "name": "YoY增长(%)",
+                "values": [
+                  1144,
+                  125,
+                  165,
+                  89,
+                  72,
+                  4,
+                  45,
+                  20
+                ]
+              }
+            ],
+            "y_axis_title": "YoY增长率(%)"
+          },
+          "insight": "FTTH<10%的市场Starlink增长率均超80%，覆盖空白=蓝海"
+        }
+      ],
+      "evidence": [
+        "StarlinkInsider 2024-2025",
+        "FTTH Council Europe 2025"
+      ]
+    },
+    {
+      "title": "Starlink Lite在3国达到平价：SV=Tigo，IE<eir Y2价",
+      "slides": [
+        {
+          "template": "data_story",
+          "focus": "价格对比",
+          "chart_data": {
+            "type": "bar",
+            "data_type": "currency_usd",
+            "categories": [
+              "萨尔瓦多",
+              "爱尔兰",
+              "乌拉圭",
+              "意大利",
+              "法国",
+              "智利"
+            ],
+            "series": [
+              {
+                "name": "Starlink Lite",
+                "values": [
+                  35,
+                  32,
+                  40,
+                  32,
+                  32,
+                  36
+                ]
+              },
+              {
+                "name": "最便宜运营商",
+                "values": [
+                  35,
+                  33,
+                  35,
+                  22,
+                  20,
+                  12
+                ]
+              }
+            ],
+            "y_axis_title": "月费(USD)"
+          },
+          "insight": "萨尔瓦多完全平价，爱尔兰eir涨价后Starlink反而更便宜"
+        }
+      ],
+      "evidence": [
+        "14国108条套餐数据"
+      ]
+    },
+    {
+      "title": "5种定价模式决定防御力：不涨价最强，跳涨最弱",
+      "slides": [
+        {
+          "template": "data_story",
+          "focus": "定价模式分析",
+          "chart_data": {
+            "type": "bar",
+            "data_type": "score",
+            "categories": [
+              "永不涨价",
+              "多年保价",
+              "Y1/Y2跳涨",
+              "固定无合约",
+              "国企覆盖"
+            ],
+            "series": [
+              {
+                "name": "防御评分",
+                "values": [
+                  9,
+                  8,
+                  3,
+                  6,
+                  9
+                ]
+              }
+            ],
+            "y_axis_title": "防御评分(1-10)"
+          },
+          "insight": "Y1/Y2跳涨反而帮Starlink获客，不涨价是最有效防御"
+        }
+      ],
+      "evidence": [
+        "14国运营商定价分析"
+      ]
+    },
+    {
+      "title": "6大防御战略可降低Starlink渗透率40-60%",
+      "slides": [
+        {
+          "template": "data_story",
+          "focus": "防御优先级",
+          "chart_data": {
+            "type": "bar",
+            "data_type": "score",
+            "categories": [
+              "加速FTTH",
+              "FWA 5G",
+              "固定价格",
+              "农村套餐",
+              "捆绑增值",
+              "政府合作"
+            ],
+            "series": [
+              {
+                "name": "预期影响",
+                "values": [
+                  9,
+                  8,
+                  7,
+                  7,
+                  5,
+                  6
+                ]
+              },
+              {
+                "name": "实施难度",
+                "values": [
+                  8,
+                  6,
+                  3,
+                  4,
+                  3,
+                  7
+                ]
+              }
+            ],
+            "y_axis_title": "评分(1-10)"
+          },
+          "insight": "固定价格模式最容易执行且效果显著"
+        }
+      ],
+      "evidence": [
+        "运营商防御策略分析"
+      ]
+    }
+  ],
+  "kpi_data": [
+    {
+      "value": "14国",
+      "label": "覆盖市场",
+      "detail": "5欧+9拉美"
+    },
+    {
+      "value": "3国",
+      "label": "已达平价",
+      "detail": "SV/IE/UY"
+    },
+    {
+      "value": "+1144%",
+      "label": "最高增长",
+      "detail": "玻利维亚"
+    },
+    {
+      "value": "108个",
+      "label": "套餐对比",
+      "detail": "全运营商"
+    }
+  ],
+  "actions": [
+    "加速FTTH/FWA覆盖",
+    "学习Iliad不涨价模式",
+    "推出农村专属低价套餐",
+    "5G FWA快速部署",
+    "与政府合作数字包容"
+  ],
+  "brand": {
+    "primary": "#CF0A2C",
+    "secondary": "#333333",
+    "accent": "#FFD100"
+  }
+}

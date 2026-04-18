@@ -187,12 +187,20 @@ class Orchestrator:
         slides = []
         slide_num = 1
 
-        # 1. Cover
+        # 1. Cover — 标题+副标题合计 ≤35 中文字
+        cover_title = interview.get("core_question", hypothesis)
+        cover_subtitle = hypothesis
+        # 如果副标题太长，截断
+        cn_total = sum(1 for c in (cover_title + cover_subtitle) if ord(c) > 127)
+        if cn_total > 35:
+            # 标题优先保留完整，副标题截断
+            max_sub = max(10, 35 - sum(1 for c in cover_title if ord(c) > 127))
+            cover_subtitle = cover_subtitle[:max_sub] + "…"
         slides.append({
             "slide_number": slide_num,
             "template": "cover",
-            "title": interview.get("core_question", hypothesis),
-            "subtitle": hypothesis,
+            "title": cover_title,
+            "subtitle": cover_subtitle,
             "date": date,
         })
         slide_num += 1
@@ -201,12 +209,19 @@ class Orchestrator:
         kpis = []
         kpi_data = interview.get("kpi_data", [])
         if kpi_data:
-            # 用户提供了结构化 KPI 数据
+            # 用户提供了结构化 KPI 数据 — 强制长度限制
             for kpi in kpi_data[:4]:
+                label = kpi.get("label", "")
+                detail = kpi.get("detail", "")
+                # KPI 盒子 2.7"×1.4"，36pt 值 + 10pt 标签，中文合计 ≤12 字
+                cn = sum(1 for c in (label + detail) if ord(c) > 127)
+                if cn > 0 and len(label + detail) > 12:
+                    label = label[:8]
+                    detail = detail[:4] if detail else ""
                 kpis.append({
                     "value": kpi.get("value", ""),
-                    "label": kpi.get("label", ""),
-                    "detail": kpi.get("detail", ""),
+                    "label": label,
+                    "detail": detail,
                 })
         else:
             # 从论点标题自动提取数字作为 KPI（尽力而为）

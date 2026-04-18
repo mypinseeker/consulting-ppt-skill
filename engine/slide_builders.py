@@ -168,7 +168,10 @@ class DeckBuilder:
 
         tf = box.text_frame; tf.word_wrap = True; tf.vertical_anchor = MSO_ANCHOR.MIDDLE
         p1 = tf.paragraphs[0]
-        p1.text = value; p1.font.size = FONT['kpi_value']; p1.font.bold = True
+        # 中文 KPI 值用较小字号避免溢出
+        cn_count = sum(1 for c in value if ord(c) > 127)
+        kpi_font_size = Pt(28) if cn_count > 0 and len(value) > 4 else FONT['kpi_value']
+        p1.text = value; p1.font.size = kpi_font_size; p1.font.bold = True
         p1.font.color.rgb = value_color; p1.font.name = self.brand.font_family
         p1.alignment = PP_ALIGN.CENTER
 

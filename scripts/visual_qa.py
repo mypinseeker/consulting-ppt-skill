@@ -148,18 +148,22 @@ def check_text_overflow(shapes, slide_num: int) -> List[QAIssue]:
             if not total_text or len(total_text) < 3:
                 continue
 
-            # 获取最大字号
-            max_font_size_emu = Pt(11)
+            # 逐段计算文字宽度（每段可能字号不同）
+            text_total_width_pt = 0
+            total_line_height_pt = 0
             for p in tf.paragraphs:
+                p_text = p.text
+                if not p_text:
+                    continue
+                p_font_emu = Pt(11)
                 if p.font and p.font.size:
-                    max_font_size_emu = max(max_font_size_emu, p.font.size)
-            font_size_pt = max_font_size_emu / 12700
-
-            # 区分中英文字符宽度
-            cn_count = sum(1 for c in total_text if ord(c) > 127)
-            en_count = len(total_text) - cn_count
-            # 中文字符宽度 ≈ 字号，英文 ≈ 字号 × 0.55
-            text_total_width_pt = cn_count * font_size_pt + en_count * font_size_pt * 0.55
+                    p_font_emu = p.font.size
+                p_font_pt = p_font_emu / 12700
+                p_cn = sum(1 for c in p_text if ord(c) > 127)
+                p_en = len(p_text) - p_cn
+                text_total_width_pt += p_cn * p_font_pt + p_en * p_font_pt * 0.55
+                total_line_height_pt += p_font_pt * 1.4
+            font_size_pt = total_line_height_pt / max(len(tf.paragraphs), 1) / 1.4 if tf.paragraphs else 11
 
             if s.width and s.height:
                 container_width_pt = s.width / 12700
