@@ -83,6 +83,14 @@ def gate_interview(run_dir: Path) -> GateResult:
     missing = [k for k in required if not data.get(k)]
     if missing:
         return GateResult(False, [f"缺少必填字段: {missing}"])
+
+    # Validate density_bias if present
+    if "density_bias" in data:
+        density_bias = data.get("density_bias")
+        valid_values = {"relaxed", "balanced", "ultra_dense"}
+        if density_bias not in valid_values:
+            return GateResult(False, [f"density_bias 值无效: '{density_bias}'，可选: relaxed/balanced/ultra_dense"])
+
     return GateResult(True)
 
 
@@ -121,6 +129,10 @@ def gate_outline(run_dir: Path) -> GateResult:
             errors.append(f"论点 {i+1} 缺少标题")
         if not arg.get("slides") and not arg.get("evidence"):
             errors.append(f"论点 {i+1} 缺少支撑页面或证据")
+
+    # Check for density_targets
+    if not data.get("density_targets"):
+        print("  ⚠️ WARNING: 大纲缺少 density_targets（建议标注密度目标）")
 
     return GateResult(len(errors) == 0, errors)
 

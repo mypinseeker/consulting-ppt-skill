@@ -174,6 +174,25 @@ class Orchestrator:
                     "evidence": ["To be confirmed"],
                 })
 
+        # Density targets based on interview preference
+        density_bias = interview.get("density_bias", "balanced")
+        density_map = {"relaxed": "medium", "balanced": "high", "ultra_dense": "high"}
+        content_density = density_map.get(density_bias, "high")
+
+        outline["density_bias"] = density_bias
+        outline["density_targets"] = {
+            "cover": "low",
+            "section_divider": "low",
+            "closing": "low",
+            "executive_summary": "medium",
+            "recommendation": "medium",
+            "data_story": content_density,
+            "comparison": content_density,
+            "framework": content_density,
+            "table": content_density,
+            "appendix": content_density,
+        }
+
         return outline
 
     def _generate_plan(self, interview: dict, outline: dict, brand: dict) -> dict:

@@ -305,6 +305,29 @@ def validate_plan(plan_path: str) -> List[ValidationError]:
             errors.append(ValidationError(sn, "density_label", "WARNING",
                           f"无效 density_label '{density}'，可选: {sorted(VALID_DENSITY_LABELS)}"))
 
+        # Density contract enforcement
+        if template not in ACTION_TITLE_EXEMPT:
+            dl = slide.get("density_label")
+            if not dl:
+                errors.append(ValidationError(sn, "density_label", "WARNING",
+                              "内容页缺少 density_label（建议标注 low/medium/high）"))
+            elif dl == "high":
+                # High density pages: warn if chart has too many series
+                chart = slide.get("chart", {})
+                n_series = len(chart.get("series", []))
+                if n_series > 4:
+                    errors.append(ValidationError(sn, "density", "WARNING",
+                                  f"高密度页有 {n_series} 个数据系列，可能过于拥挤（建议 ≤4）"))
+            elif dl == "low":
+                # Low density pages: warn if too many data points
+                kpis = slide.get("kpis", [])
+                recs = slide.get("recommendations", [])
+                points = slide.get("left", {}).get("points", []) + slide.get("right", {}).get("points", [])
+                total = len(kpis) + len(recs) + len(points)
+                if total > 3:
+                    errors.append(ValidationError(sn, "density", "WARNING",
+                                  f"低密度页有 {total} 个内容项，建议 ≤3"))
+
         # 来源/脚注
         if template in ("data_story", "table", "comparison", "framework"):
             if not slide.get("source"):
