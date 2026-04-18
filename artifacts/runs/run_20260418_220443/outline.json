@@ -1,0 +1,66 @@
+{
+  "top_conclusion": "Optical modules are the safest bet at $194B market size",
+  "narrative_flow": "conclusion_first",
+  "arguments": [
+    {
+      "title": "Optical module market reaches $194B by 2026, China leads",
+      "slides": [
+        {
+          "template": "data_story",
+          "focus": "market size",
+          "chart_data": {
+            "type": "bar",
+            "data_type": "currency_usd",
+            "categories": [
+              "Optical",
+              "CPO",
+              "Liquid",
+              "PCB"
+            ],
+            "series": [
+              {
+                "name": "Market($B)",
+                "values": [
+                  194,
+                  20,
+                  45,
+                  80
+                ]
+              }
+            ],
+            "y_axis_title": "Market Size($B)"
+          },
+          "insight": "Optical modules most certain"
+        }
+      ],
+      "evidence": [
+        "Industry reports 2026"
+      ]
+    },
+    {
+      "title": "Additional analysis supports the conclusion",
+      "slides": [
+        {
+          "template": "data_story",
+          "focus": "supporting data"
+        }
+      ],
+      "evidence": [
+        "To be confirmed"
+      ]
+    }
+  ],
+  "density_bias": "balanced",
+  "density_targets": {
+    "cover": "low",
+    "section_divider": "low",
+    "closing": "low",
+    "executive_summary": "medium",
+    "recommendation": "medium",
+    "data_story": "high",
+    "comparison": "high",
+    "framework": "high",
+    "table": "high",
+    "appendix": "high"
+  }
+}

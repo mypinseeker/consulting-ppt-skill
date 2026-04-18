@@ -1,0 +1,110 @@
+{
+  "metadata": {
+    "title": "Should we invest in AI infra?",
+    "date": "April 2026",
+    "brand": {
+      "primary": "#1B365D",
+      "secondary": "#00A3E0",
+      "accent": "#F5A623"
+    },
+    "total_slides": 6,
+    "generated_by": "consulting-ppt-skill v3.0"
+  },
+  "slides": [
+    {
+      "slide_number": 1,
+      "template": "cover",
+      "title": "Should we invest in AI infra?",
+      "subtitle": "Optical modules are the safest bet at $194B market size",
+      "date": "April 2026"
+    },
+    {
+      "slide_number": 2,
+      "template": "executive_summary",
+      "action_title": "Optical modules are the safest bet at $194B market size",
+      "subtitle": "Key findings summary",
+      "kpis": [
+        {
+          "value": "$194B",
+          "label": "Optical",
+          "detail": ""
+        }
+      ],
+      "density_label": "medium"
+    },
+    {
+      "slide_number": 3,
+      "template": "data_story",
+      "action_title": "Optical module market reaches $194B by 2026, China leads",
+      "subtitle": "market size",
+      "density_label": "medium",
+      "chart": {
+        "type": "bar",
+        "data_type": "currency_usd",
+        "categories": [
+          "Optical",
+          "CPO",
+          "Liquid",
+          "PCB"
+        ],
+        "series": [
+          {
+            "name": "Market($B)",
+            "values": [
+              194,
+              20,
+              45,
+              80
+            ]
+          }
+        ],
+        "y_axis_title": "Market Size($B)"
+      },
+      "insight": "Optical modules most certain",
+      "source": "Industry reports 2026"
+    },
+    {
+      "slide_number": 4,
+      "template": "data_story",
+      "action_title": "Additional analysis supports the conclusion",
+      "subtitle": "supporting data",
+      "density_label": "medium",
+      "chart": {
+        "type": "bar",
+        "categories": [
+          "[需要填充真实数据]"
+        ],
+        "series": [
+          {
+            "name": "Data",
+            "values": [
+              0
+            ]
+          }
+        ],
+        "y_axis_title": "[单位]"
+      },
+      "insight": "[需要填充: supporting data 的关键洞察]",
+      "source": "To be confirmed"
+    },
+    {
+      "slide_number": 5,
+      "template": "recommendation",
+      "action_title": "1 recommended actions to move forward",
+      "recommendations": [
+        {
+          "number": "1",
+          "title": "Invest in optical module leade",
+          "detail": "Invest in optical module leaders"
+        }
+      ],
+      "density_label": "medium"
+    },
+    {
+      "slide_number": 6,
+      "template": "closing",
+      "title": "Thank You",
+      "subtitle": "Board — April 2026"
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "audience": "Board",
+  "core_question": "Should we invest in AI infra?",
+  "hypothesis": "Optical modules are the safest bet at $194B market size",
+  "density_bias": "balanced",
+  "key_arguments": [
+    {
+      "title": "Optical module market reaches $194B by 2026, China leads",
+      "slides": [
+        {
+          "template": "data_story",
+          "focus": "market size",
+          "chart_data": {
+            "type": "bar",
+            "data_type": "currency_usd",
+            "categories": [
+              "Optical",
+              "CPO",
+              "Liquid",
+              "PCB"
+            ],
+            "series": [
+              {
+                "name": "Market($B)",
+                "values": [
+                  194,
+                  20,
+                  45,
+                  80
+                ]
+              }
+            ],
+            "y_axis_title": "Market Size($B)"
+          },
+          "insight": "Optical modules most certain"
+        }
+      ],
+      "evidence": [
+        "Industry reports 2026"
+      ]
+    }
+  ],
+  "kpi_data": [
+    {
+      "value": "$194B",
+      "label": "Optical",
+      "detail": ""
+    }
+  ],
+  "actions": [
+    "Invest in optical module leaders"
+  ],
+  "brand": {
+    "primary": "#1B365D",
+    "secondary": "#00A3E0",
+    "accent": "#F5A623"
+  }
+}

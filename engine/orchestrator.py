@@ -24,6 +24,8 @@ from .planning_schema import validate_and_report
 from .gates import check_pyramid_principle
 from .renderer import PlanRenderer
 from .design_system import BrandPalette
+from .outline_agent import generate_outline
+from .plan_agent import generate_plan
 
 
 class FailurePolicy(Enum):
@@ -206,222 +208,12 @@ class Orchestrator:
     # ================================================================
 
     def _generate_outline(self, interview: dict) -> dict:
-        """从采访答案生成 Pyramid Principle 大纲"""
-        hypothesis = interview.get("hypothesis", "")
-        arguments = interview.get("key_arguments", [])
-        actions = interview.get("actions", [])
-
-        outline = {
-            "top_conclusion": hypothesis,
-            "narrative_flow": "conclusion_first",
-            "arguments": [],
-        }
-
-        for i, arg in enumerate(arguments):
-            # 支持 string 或 dict 格式
-            if isinstance(arg, dict):
-                outline["arguments"].append(arg)
-            else:
-                slides = [{"template": "data_story", "focus": arg}]
-                outline["arguments"].append({
-                    "title": arg,
-                    "slides": slides,
-                    "evidence": [],
-                })
-
-        # Pyramid Principle 校验
-        issues = check_pyramid_principle(outline)
-        criticals = [i for i in issues if i[0] == "CRITICAL"]
-        if criticals:
-            print(f"  ⚠️ 大纲有 {len(criticals)} 个 CRITICAL 问题，尝试自动修复...")
-            # 基本修复：确保至少有 2 个论点
-            if len(outline["arguments"]) < 2:
-                outline["arguments"].append({
-                    "title": "Additional analysis supports the conclusion",
-                    "slides": [{"template": "data_story", "focus": "supporting data"}],
-                    "evidence": ["To be confirmed"],
-                })
-
-        # Density targets based on interview preference
-        density_bias = interview.get("density_bias", "balanced")
-        density_map = {"relaxed": "medium", "balanced": "high", "ultra_dense": "high"}
-        content_density = density_map.get(density_bias, "high")
-
-        outline["density_bias"] = density_bias
-        outline["density_targets"] = {
-            "cover": "low",
-            "section_divider": "low",
-            "closing": "low",
-            "executive_summary": "medium",
-            "recommendation": "medium",
-            "data_story": content_density,
-            "comparison": content_density,
-            "framework": content_density,
-            "table": content_density,
-            "appendix": content_density,
-        }
-
-        return outline
+        """Delegate to outline_agent (main agent doesn't write artifacts)."""
+        return generate_outline(interview)
 
     def _generate_plan(self, interview: dict, outline: dict, brand: dict) -> dict:
-        """从大纲生成 Planning JSON"""
-        hypothesis = outline.get("top_conclusion", "")
-        arguments = outline.get("arguments", [])
-        actions = interview.get("actions", [])
-        page_count = interview.get("page_count", "8-12")
-        date = datetime.now().strftime("%B %Y")
-
-        slides = []
-        slide_num = 1
-
-        # 1. Cover — 标题+副标题合计 ≤35 中文字
-        cover_title = interview.get("core_question", hypothesis)
-        cover_subtitle = hypothesis
-        # 如果副标题太长，截断
-        cn_total = sum(1 for c in (cover_title + cover_subtitle) if ord(c) > 127)
-        if cn_total > 35:
-            # 标题优先保留完整，副标题截断
-            max_sub = max(10, 35 - sum(1 for c in cover_title if ord(c) > 127))
-            cover_subtitle = cover_subtitle[:max_sub] + "…"
-        slides.append({
-            "slide_number": slide_num,
-            "template": "cover",
-            "title": cover_title,
-            "subtitle": cover_subtitle,
-            "date": date,
-        })
-        slide_num += 1
-
-        # 2. Executive Summary — 用采访中的 kpi_data 或从论点提取
-        kpis = []
-        kpi_data = interview.get("kpi_data", [])
-        if kpi_data:
-            # 用户提供了结构化 KPI 数据 — 强制长度限制
-            for kpi in kpi_data[:4]:
-                label = kpi.get("label", "")
-                detail = kpi.get("detail", "")
-                # KPI 盒子 2.7"×1.4"，36pt 值 + 10pt 标签，中文合计 ≤12 字
-                cn = sum(1 for c in (label + detail) if ord(c) > 127)
-                if cn > 0 and len(label + detail) > 12:
-                    label = label[:8]
-                    detail = detail[:4] if detail else ""
-                kpis.append({
-                    "value": kpi.get("value", ""),
-                    "label": label,
-                    "detail": detail,
-                })
-        else:
-            # 从论点标题自动提取数字作为 KPI（尽力而为）
-            import re
-            for i, arg in enumerate(arguments[:4]):
-                title = arg.get("title", "")
-                # 尝试提取标题中的第一个数字+单位作为 KPI 值
-                num_match = re.search(r'(\d+[\.,]?\d*\s*[%$€¥M万亿]+|\$?\d+[\.,]?\d*[MBK]?\b)', title)
-                if num_match:
-                    kpis.append({
-                        "value": num_match.group(0),
-                        "label": title[:40],
-                        "detail": "",
-                    })
-                else:
-                    kpis.append({
-                        "value": f"Point {i+1}",
-                        "label": title[:40],
-                        "detail": "",
-                    })
-        slides.append({
-            "slide_number": slide_num,
-            "template": "executive_summary",
-            "action_title": hypothesis,
-            "subtitle": "Key findings summary",
-            "kpis": kpis,
-            "density_label": "medium",
-        })
-        slide_num += 1
-
-        # 3-N. 每个论点的支撑页面
-        for arg in arguments:
-            arg_slides = arg.get("slides", [])
-            for s in arg_slides:
-                template = s.get("template", "data_story")
-                slide_data = {
-                    "slide_number": slide_num,
-                    "template": template,
-                    "action_title": arg.get("title", ""),
-                    "subtitle": s.get("focus", ""),
-                    "density_label": "medium",
-                }
-
-                # data_story — 优先用用户提供的 chart_data
-                if template == "data_story":
-                    chart_data = s.get("chart_data")
-                    if chart_data:
-                        slide_data["chart"] = chart_data
-                    else:
-                        # 无数据时标记为需要填充（Gate 会拦截占位数据）
-                        slide_data["chart"] = {
-                            "type": "bar",
-                            "categories": ["[需要填充真实数据]"],
-                            "series": [{"name": "Data", "values": [0]}],
-                            "y_axis_title": "[单位]",
-                        }
-                    slide_data["insight"] = s.get("insight", f"[需要填充: {s.get('focus', '')} 的关键洞察]")
-                    # source 从 evidence 获取
-                    evidence = arg.get("evidence", [])
-                    slide_data["source"] = ", ".join(evidence) if evidence else "[需要填充数据来源]"
-
-                # comparison — 优先用用户提供的对比数据
-                elif template == "comparison":
-                    comp_data = s.get("comparison_data", {})
-                    slide_data["left"] = comp_data.get("left", {
-                        "label": "[选项 A]",
-                        "points": ["[需要填充对比点]"],
-                    })
-                    slide_data["right"] = comp_data.get("right", {
-                        "label": "[选项 B]",
-                        "points": ["[需要填充对比点]"],
-                    })
-
-                slides.append(slide_data)
-                slide_num += 1
-
-        # N+1. Recommendation（如果有 actions）
-        if actions:
-            recs = []
-            for i, action in enumerate(actions[:5]):  # 支持最多 5 个行动建议
-                recs.append({
-                    "number": str(i + 1),
-                    "title": action.split(":")[0] if ":" in action else action[:30],
-                    "detail": action,
-                })
-            slides.append({
-                "slide_number": slide_num,
-                "template": "recommendation",
-                "action_title": f"{len(actions)} recommended actions to move forward",
-                "recommendations": recs,
-                "density_label": "medium",
-            })
-            slide_num += 1
-
-        # Closing
-        slides.append({
-            "slide_number": slide_num,
-            "template": "closing",
-            "title": "Thank You",
-            "subtitle": f"{interview.get('audience', 'Team')} — {date}",
-        })
-
-        plan = {
-            "metadata": {
-                "title": interview.get("core_question", ""),
-                "date": date,
-                "brand": brand,
-                "total_slides": len(slides),
-                "generated_by": "consulting-ppt-skill v2.0",
-            },
-            "slides": slides,
-        }
-        return plan
+        """Delegate to plan_agent (main agent doesn't write artifacts)."""
+        return generate_plan(interview, outline, brand)
 
     def _render_and_qa(self, plan: dict, manual_audit: bool = False) -> str:
         """渲染 PPTX + 简单 QA"""
@@ -490,6 +282,13 @@ class Orchestrator:
             "total_slides": len(prs.slides),
             "qa_passed": bool(gate),
             "generated_at": datetime.now().isoformat(),
+            "density_compliance": "all pages have density_label" if all(
+                s.get("density_label") for s in plan.get("slides", [])
+                if s.get("template") not in ("cover", "closing", "section_divider")
+            ) else "some pages missing density_label",
+            "total_warnings": qa_report.get("warning_count", 0),
+            "total_chars": sum(len(s.text) for slide in prs.slides for s in slide.shapes if hasattr(s, 'text')),
+            "chart_count": sum(1 for slide in prs.slides for s in slide.shapes if hasattr(s, 'chart')),
         }
         self.run.save_artifact(Stage.EXPORT, manifest)
 

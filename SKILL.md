@@ -8,12 +8,12 @@ description: >
 license: MIT
 metadata:
   author: mypinseeker
-  version: "2.0.0"
+  version: "3.0.0"
   last_updated: "2026-04-18"
   architecture: "State Machine + Planning JSON Contract + Renderer + QA Gate"
 ---
 
-# Consulting PPT Skill v2.0
+# Consulting PPT Skill v3.0
 
 One prompt → McKinsey-quality PPTX. Fully automated 7-stage pipeline with
 Pyramid Principle enforcement, Action Title validation, and QA gates.
@@ -137,6 +137,19 @@ pptx_path = orc.run_from_plan("path/to/plan.json")
 - Each argument title answers "So What?"
 - Gate: `engine/gates.py check_pyramid_principle()` must pass
 
+### Rule 9: Density Contract
+- Every content page MUST have `density_label` (low/medium/high)
+- density_bias collected at interview, frozen in outline, enforced in Gate
+- high-density pages: max 4 chart series, charts ≤70% area
+- low-density pages: max 3 content items
+- Density is CONTRACT, not suggestion — Gate blocks violations
+
+### Rule 10: Failure Handling
+- Gate failure → retry (max 2) → blocked (return None, no crash)
+- Never `raise ValueError` on Gate failure
+- Blocked stages save state for `RunManager.resume()` recovery
+- Per-page markers enable partial recovery after crash
+
 ---
 
 ## 7-STAGE PIPELINE
@@ -229,9 +242,12 @@ Stage 7: EXPORT       → delivery_manifest  (最终 PPTX)
 
 ```
 consulting-ppt-skill/
-├── SKILL.md                    # This file (v2.0)
+├── SKILL.md                    # This file (v3.0)
 ├── engine/
-│   ├── orchestrator.py         # End-to-end pipeline (3 entry points)
+│   ├── orchestrator.py         # Dispatcher only (no content generation)
+│   ├── outline_agent.py        # Pyramid Principle outline generator
+│   ├── plan_agent.py           # Planning JSON generator
+│   ├── step_registry.py        # 25-step canonical plan
 │   ├── state_machine.py        # 7-stage state machine + RunManager
 │   ├── gates.py                # Pyramid Principle + Gate checks
 │   ├── planning_schema.py      # Planning JSON validation
