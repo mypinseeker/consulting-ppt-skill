@@ -17,12 +17,19 @@ import json
 from pathlib import Path
 from datetime import datetime
 from typing import Optional, Dict, Any, List
+from enum import Enum
 
 from .state_machine import RunManager, Stage
 from .planning_schema import validate_and_report
 from .gates import check_pyramid_principle
 from .renderer import PlanRenderer
 from .design_system import BrandPalette
+
+
+class FailurePolicy(Enum):
+    RETRY = "retry"
+    ROLLBACK = "rollback"
+    BLOCKED = "blocked"
 
 
 class Orchestrator:
@@ -41,6 +48,42 @@ class Orchestrator:
             self.run = None
 
     # ================================================================
+    # 工具方法：失败处理和环境检查
+    # ================================================================
+
+    def _handle_failure(self, stage_name: str, gate_result, attempt: int = 1, max_retries: int = 2):
+        """处理 Gate 失败：重试或阻塞"""
+        if attempt <= max_retries:
+            print(f"  🔄 {stage_name} Gate 失败 (尝试 {attempt}/{max_retries})，重试...")
+            return FailurePolicy.RETRY
+        else:
+            print(f"  ⛔ {stage_name} 连续 {max_retries} 次失败")
+            for err in gate_result.errors:
+                print(f"     ❌ {err}")
+            return FailurePolicy.BLOCKED
+
+    def _preflight_check(self) -> bool:
+        """环境预检查：依赖 + 磁盘空间"""
+        issues = []
+        try:
+            import pptx
+        except ImportError:
+            issues.append("python-pptx 未安装 (pip install python-pptx)")
+
+        import shutil
+        free_mb = shutil.disk_usage("/").free / (1024**2)
+        if free_mb < 50:
+            issues.append(f"磁盘空间不足: {free_mb:.0f}MB (需要 50MB+)")
+
+        if issues:
+            print("❌ 环境检查失败:")
+            for i in issues:
+                print(f"  ⚠️ {i}")
+            return False
+        print("✅ 环境检查通过")
+        return True
+
+    # ================================================================
     # 入口 1：从采访开始（完整流程）
     # ================================================================
     def run_from_interview(self, interview: dict) -> str:
@@ -53,14 +96,22 @@ class Orchestrator:
         Returns:
             输出 PPTX 路径
         """
+        if not self._preflight_check():
+            return None
+
         title = interview.get("core_question", "Untitled Deck")
         self.run = RunManager.create(title)
 
         # P0: 保存采访
         self.run.save_artifact(Stage.INTERVIEW, interview)
-        gate = self.run.check_gate(Stage.INTERVIEW)
-        if not gate:
-            raise ValueError(f"采访 Gate 失败: {gate.errors}")
+        for attempt in range(1, 4):
+            gate = self.run.check_gate(Stage.INTERVIEW)
+            if gate:
+                break
+            policy = self._handle_failure("INTERVIEW", gate, attempt)
+            if policy == FailurePolicy.BLOCKED:
+                print("  💡 请修复 interview 数据后调用 RunManager.resume() 继续")
+                return None
 
         # P1: 自动确认（编排模式下跳过人工确认）
         self.run.save_artifact(Stage.CONFIRM, {
@@ -72,9 +123,14 @@ class Orchestrator:
         # P3: 生成大纲
         outline = self._generate_outline(interview)
         self.run.save_artifact(Stage.OUTLINE, outline)
-        gate = self.run.check_gate(Stage.OUTLINE)
-        if not gate:
-            raise ValueError(f"大纲 Gate 失败: {gate.errors}")
+        for attempt in range(1, 4):
+            gate = self.run.check_gate(Stage.OUTLINE)
+            if gate:
+                break
+            policy = self._handle_failure("OUTLINE", gate, attempt)
+            if policy == FailurePolicy.BLOCKED:
+                print("  💡 请修复 outline 数据后调用 RunManager.resume() 继续")
+                return None
 
         # P3.5: 锁定风格
         brand = interview.get("brand", self.DEFAULT_BRAND)
@@ -82,11 +138,16 @@ class Orchestrator:
         self.run.save_artifact(Stage.STYLE_LOCK, style)
 
         # P4: 生成 Plan JSON
-        plan = self._generate_plan(interview, outline, brand)
-        self.run.save_artifact(Stage.GENERATE, plan)
-        gate = self.run.check_gate(Stage.GENERATE)
-        if not gate:
-            raise ValueError(f"Plan Gate 失败: {gate.errors}")
+        for attempt in range(1, 4):
+            plan = self._generate_plan(interview, outline, brand)
+            self.run.save_artifact(Stage.GENERATE, plan)
+            gate = self.run.check_gate(Stage.GENERATE)
+            if gate:
+                break
+            policy = self._handle_failure("GENERATE", gate, attempt)
+            if policy == FailurePolicy.BLOCKED:
+                print("  💡 请手动编辑 plan.json 修复问题后调用 RunManager.resume() 继续")
+                return None
 
         # P5: 渲染 + QA
         output_path = self._render_and_qa(plan)
@@ -101,6 +162,9 @@ class Orchestrator:
     # ================================================================
     def run_from_outline(self, outline: dict, brand: dict = None) -> str:
         """从已有大纲开始"""
+        if not self._preflight_check():
+            return None
+
         self.run = RunManager.create(outline.get("top_conclusion", "Deck"))
 
         # 跳过采访和确认
@@ -123,6 +187,9 @@ class Orchestrator:
     # ================================================================
     def run_from_plan(self, plan_path: str) -> str:
         """从已有 Plan JSON 直接渲染"""
+        if not self._preflight_check():
+            return None
+
         plan = json.loads(Path(plan_path).read_text())
         self.run = RunManager.create("Direct Render")
 
@@ -363,8 +430,12 @@ class Orchestrator:
 
         # 渲染
         output_path = str(self.run.run_dir / "deck.pptx")
-        renderer = PlanRenderer(str(plan_path))
-        renderer.render(output_path)
+        try:
+            renderer = PlanRenderer(str(plan_path))
+            renderer.render(output_path)
+        except Exception as e:
+            print(f"  ❌ 渲染失败: {e}")
+            return None
 
         # 简单 QA
         from pptx import Presentation
