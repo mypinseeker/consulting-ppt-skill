@@ -1,0 +1,36 @@
+{
+  "top_conclusion": "光模块赛道最确定（$194亿市场），CPO 长期空间最大（$200亿+ by 2036）",
+  "narrative_flow": "conclusion_first",
+  "arguments": [
+    {
+      "title": "光模块 2026 年市场规模 $194 亿，中国企业全球领先",
+      "slides": [
+        {
+          "template": "data_story",
+          "focus": "光模块 2026 年市场规模 $194 亿，中国企业全球领先"
+        }
+      ],
+      "evidence": []
+    },
+    {
+      "title": "CPO 是下一代技术，2036 年市场超 $200 亿但量产良率是关键变量",
+      "slides": [
+        {
+          "template": "data_story",
+          "focus": "CPO 是下一代技术，2036 年市场超 $200 亿但量产良率是关键变量"
+        }
+      ],
+      "evidence": []
+    },
+    {
+      "title": "液冷是对的逻辑但慢的节奏，PCB 要警惕 2028 产能过剩",
+      "slides": [
+        {
+          "template": "data_story",
+          "focus": "液冷是对的逻辑但慢的节奏，PCB 要警惕 2028 产能过剩"
+        }
+      ],
+      "evidence": []
+    }
+  ]
+}

@@ -1,274 +1,286 @@
 ---
 name: consulting-ppt
 description: >
-  Generate McKinsey-quality PowerPoint presentations with python-pptx.
-  Enforces strict brand palette (max 3 hues), Action Titles, embedded charts,
-  KPI metric boxes, insight callouts, and automated QA audit.
-  Combines McKinsey consulting methodology with elite presentation design.
+  McKinsey-quality PPT generator with automated pipeline.
+  One-sentence input → 7-stage state machine → professional PPTX output.
+  Enforces Pyramid Principle, Action Titles, strict 3-color brand system,
+  and automated QA with Gate checks at every stage.
 license: MIT
 metadata:
   author: mypinseeker
-  version: "1.0.0"
-  last_updated: "2026-03-07"
-  architecture: "Design System + Reusable Engine + QA Gate"
+  version: "2.0.0"
+  last_updated: "2026-04-18"
+  architecture: "State Machine + Planning JSON Contract + Renderer + QA Gate"
 ---
 
-# Consulting PPT Skill v1.0
+# Consulting PPT Skill v2.0
 
-Generate professional, McKinsey-quality PowerPoint presentations programmatically
-using python-pptx. Every deck follows a strict design system with automated QA.
+One prompt → McKinsey-quality PPTX. Fully automated 7-stage pipeline with
+Pyramid Principle enforcement, Action Title validation, and QA gates.
 
 ---
 
-## CRITICAL RULES (Claude MUST follow)
+## HOW TO USE (Claude reads this)
+
+### Mode 1: Full Pipeline (一句话生成)
+
+When user says something like:
+- "帮我做一份关于 XX 的 PPT"
+- "Generate a deck about..."
+- "做一份分析报告 PPT"
+
+**Execute this:**
+
+```python
+import sys
+sys.path.insert(0, "/home/Administrator/Workspace/consulting-ppt-skill")
+from engine.orchestrator import Orchestrator
+
+# Step 1: 采访用户（麦肯锡 10 问）
+# 读取 references/playbooks/P0_interview.md 获取问题清单
+# 向用户提问前 5 个必答问题，收集回答
+
+interview = {
+    "audience": "...",           # Q1: 谁是受众
+    "core_question": "...",      # Q2: 核心问题（一句话）
+    "hypothesis": "...",         # Q3: 结论/假设
+    "key_arguments": [...],      # Q4: 2-5 个支撑论点
+    "data_sources": [...],       # Q5: 数据来源
+    "actions": [...],            # Q7: 行动建议（可选）
+    "brand": {                   # Q8: 品牌色（可选，有默认值）
+        "primary": "#00377B",
+        "secondary": "#009FDB",
+        "accent": "#FFD100"
+    },
+}
+
+# Step 2: 自动执行全流程
+orc = Orchestrator()
+pptx_path = orc.run_from_interview(interview)
+# 输出: artifacts/runs/<run_id>/deck.pptx
+```
+
+### Mode 2: From Data (用户已有数据)
+
+When user provides structured data (CSV/Excel/JSON) and asks for PPT:
+
+```python
+# 直接从大纲开始，跳过采访
+orc = Orchestrator()
+pptx_path = orc.run_from_outline({
+    "top_conclusion": "用户的核心结论",
+    "arguments": [
+        {"title": "论点1...", "slides": [{"template": "data_story"}]},
+        {"title": "论点2...", "slides": [{"template": "comparison"}]},
+    ]
+})
+```
+
+### Mode 3: From Plan JSON (精确控制每一页)
+
+When user provides or you generate a plan.json:
+
+```python
+orc = Orchestrator()
+pptx_path = orc.run_from_plan("path/to/plan.json")
+```
+
+---
+
+## CRITICAL RULES (Claude MUST follow — 违反任何一条 = 不合格)
 
 ### Rule 1: Max 3 Brand Hues + Neutrals
 - User defines **exactly 3 brand colors** (primary, secondary, accent)
-- ALL chart/shape/text colors derive from these 3 via shade/tint
-- Differentiation by **lightness**, never by adding new hues
-- Neutrals (white, grays, charcoal, black) are always allowed
-- **Violation**: Using red, green, orange, purple etc. outside the brand palette
+- ALL colors derive from these 3 via shade/tint — **never add new hues**
+- Neutrals (white, grays, charcoal, black) always allowed
+- **Violation**: Using red, green, orange, purple outside brand palette
 
 ### Rule 2: Action Titles (Conclusions, Not Topics)
-- Every slide title is a **complete sentence stating the conclusion**
+- Every content slide title is a **complete sentence stating the conclusion**
 - BAD: "Market Analysis", "Cost Comparison", "Timeline"
 - GOOD: "Switching vendors costs 22-57% more than staying"
 - GOOD: "Migration creates a 16-month competitive gap"
-- Subtitle provides context/scope, title provides the insight
+- **Exempt**: cover, section_divider, closing, appendix
 
 ### Rule 3: Every Number Has a Unit
-- Chart data labels: `$#,##0.0"M"` or `#,##0"%"` — never bare `#,##0.0`
-- KPI boxes: "+$54.0M" not "+54.0"
+- KPI: "+$54.0M" not "+54.0"
+- Charts: `$#,##0.0"M"` or `#,##0"%"` — never bare numbers
 - Tables: column headers include unit `($M)`, `(%)`, `(months)`
-- Insight text: "$29.5M" not "29.5 units"
-- **Exception**: counts that are self-evident ("10,500 sites", "4 bands")
 
 ### Rule 4: Contrast Ratio >= 3:1
-- All text must have >= 3:1 contrast against its background
-- Dark background (any brand color, charcoal) => WHITE text
-- Light background (white, light gray, tints) => CHARCOAL text
+- Dark background → WHITE text
+- Light background → CHARCOAL text
 - **Never**: yellow on blue, gray on red, blue on blue
-- Run `qa_ppt_audit.py` to verify — 0 CRITICAL required
 
 ### Rule 5: Charts Occupy 60-70% of Slide
-- Charts are not decoration — they ARE the content
-- Minimum chart height: 3.0 inches on a 7.5-inch slide
-- Data labels on every bar/point — the audience reads labels, not axes
-- One chart per slide (two max for comparison layouts)
+- Data labels on every bar/point
+- One chart per slide (two max for comparison)
 
-### Rule 6: Information Density 50-70 chars/sq inch
-- McKinsey pages are dense but not cluttered
-- Empty space > 2 sq inches => add insight box or data annotation
-- Cover/divider slides are the exception (low density OK)
+### Rule 6: Pyramid Principle
+- Top-level conclusion first (top_conclusion)
+- 2-5 supporting arguments, MECE
+- Each argument title answers "So What?"
+- Gate: `engine/gates.py check_pyramid_principle()` must pass
 
 ---
 
-## File Structure
+## 7-STAGE PIPELINE
+
+```
+Stage 0: INTERVIEW    → interview.json     (麦肯锡 10 问)
+Stage 1: CONFIRM      → requirements.json  (用户确认)
+Stage 2: RESEARCH     → research.json      (可跳过，用户自带数据)
+Stage 3: OUTLINE      → outline.json       (Pyramid Principle 大纲)
+Stage 4: STYLE_LOCK   → style.json         (3 色品牌锁定)
+Stage 5: GENERATE     → plan.json          (Planning JSON 合同)
+Stage 6: QA           → qa_report.json     (0 CRITICAL 才通过)
+Stage 7: EXPORT       → delivery_manifest  (最终 PPTX)
+```
+
+**Gate 规则**: 每阶段产物落盘后经 Gate 校验。0 CRITICAL = 通过。失败只回退当前步。
+
+**断点恢复**: 产物文件即 checkpoint。中断后用 `RunManager.resume(run_id)` 自动推断继续。
+
+---
+
+## SLIDE TEMPLATES (10 种)
+
+| Template | JSON `template` 值 | 用途 |
+|----------|-------------------|------|
+| Cover | `cover` | 封面：全深色背景 + 标题 + 日期 |
+| Section Divider | `section_divider` | 章节分隔 |
+| Executive Summary | `executive_summary` | KPI 卡片行 (3-4 个) |
+| Data Story | `data_story` | Action Title + 大图表 + Insight Box |
+| Comparison | `comparison` | 左右分栏对比 |
+| Framework | `framework` | 2x2 矩阵 / Issue Tree |
+| Table | `table` | 数据表格 |
+| Recommendation | `recommendation` | 3 个编号行动卡 |
+| Appendix | `appendix` | 附录数据 + 来源 |
+| Closing | `closing` | 致谢页 |
+
+---
+
+## PLANNING JSON FORMAT
+
+每页的数据合同（AI 先生成这个 JSON，校验通过后再渲染）：
+
+```json
+{
+  "metadata": {
+    "title": "Deck title",
+    "brand": {"primary": "#hex", "secondary": "#hex", "accent": "#hex"},
+    "total_slides": 8
+  },
+  "slides": [
+    {
+      "slide_number": 1,
+      "template": "cover",
+      "title": "...",
+      "subtitle": "...",
+      "date": "April 2026"
+    },
+    {
+      "slide_number": 2,
+      "template": "executive_summary",
+      "action_title": "Core conclusion sentence with numbers",
+      "kpis": [
+        {"value": "+57%", "label": "Scenario 1", "detail": "$54M delta"}
+      ],
+      "source": "Data source, Year"
+    },
+    {
+      "slide_number": 3,
+      "template": "data_story",
+      "action_title": "Conclusion sentence about what the chart shows",
+      "chart": {
+        "type": "stacked_bar",
+        "categories": ["A", "B", "C"],
+        "series": [{"name": "Series 1", "values": [10, 20, 30]}],
+        "y_axis_title": "Cost ($M)"
+      },
+      "insight": "Key takeaway from the data",
+      "source": "Data source"
+    }
+  ]
+}
+```
+
+**Validate before render**: `python -c "from engine.planning_schema import validate_and_report; validate_and_report('plan.json')"`
+
+---
+
+## FILE STRUCTURE
 
 ```
 consulting-ppt-skill/
-  SKILL.md              # This file — skill definition and rules
-  README.md             # Quick start guide
-  engine/
-    design_system.py    # Brand palette, color math, font constants
-    slide_builders.py   # Reusable slide templates (cover, KPI, chart, etc.)
-    chart_helpers.py    # Bar, stacked, area chart builders
-    table_helpers.py    # McKinsey-style tables
-  scripts/
-    qa_ppt_audit.py     # Automated QA: contrast, units, density
-  references/
-    design-specs.md     # Detailed design specifications
-    layouts.md          # 7 McKinsey page layout types
-    color-guide.md      # How to derive shade/tint palette from 3 brand colors
-  examples/
-    tco_example.py      # Complete TCO presentation example
+├── SKILL.md                    # This file (v2.0)
+├── engine/
+│   ├── orchestrator.py         # End-to-end pipeline (3 entry points)
+│   ├── state_machine.py        # 7-stage state machine + RunManager
+│   ├── gates.py                # Pyramid Principle + Gate checks
+│   ├── planning_schema.py      # Planning JSON validation
+│   ├── renderer.py             # JSON → PPTX rendering
+│   ├── design_system.py        # 3-color brand palette + typography
+│   ├── slide_builders.py       # 10 slide templates
+│   └── chart_helpers.py        # Waterfall, line, pie charts
+├── references/
+│   ├── playbooks/
+│   │   ├── P0_interview.md     # 麦肯锡 10 问清单
+│   │   └── P3_outline.md       # Pyramid Principle 规则
+│   ├── design-specs.md
+│   ├── layouts.md
+│   └── color-guide.md
+├── scripts/
+│   └── qa_ppt_audit.py         # QA 审计
+├── examples/
+│   ├── sample_plan.json        # 6 页示例 Plan JSON
+│   └── tco_example.py          # Python API 示例
+├── artifacts/
+│   └── runs/<RUN_ID>/          # 每次运行的产物目录
+└── output/                     # 输出目录
 ```
 
 ---
 
-## Quick Start
+## DESIGN SYSTEM
 
-### 1. Define Your Brand
-
-```python
-from engine.design_system import BrandPalette
-
-brand = BrandPalette(
-    primary   = "#00377B",  # Dark blue
-    secondary = "#009FDB",  # Bright blue
-    accent    = "#FFD100",  # Yellow
-    font_family = "Arial",
-)
-```
-
-The system auto-generates 6 shades of primary, 2 shades of accent,
-plus neutral grays — all derived from your 3 colors.
-
-### 2. Build Slides
-
-```python
-from engine.slide_builders import DeckBuilder
-
-deck = DeckBuilder(brand)
-
-deck.add_cover("RAN TCO Analysis", "5-Year Stay vs Switch Model")
-
-deck.add_kpi_slide(
-    title="Switching costs 22-57% more than staying across all scenarios",
-    kpis=[
-        ("+57%", "S1: Bogota", "$54.0M delta"),
-        ("+47%", "S2: 3-Region", "$62.1M delta"),
-        ("+22%", "S3: Full Network", "$106.0M delta"),
-    ]
-)
-
-deck.add_chart_slide(
-    title="Migration and multi-vendor costs dominate the switching premium",
-    chart_type="stacked_bar",
-    categories=["S1", "S2", "S3", "S4"],
-    series=[("Migration", [22.9, 31.6, 110.0, 176.0]), ...],
-    y_axis_title="Cost ($M)",
-)
-
-deck.add_insight_slide(
-    title="Three actions to capture value without switching risk",
-    insights=[
-        ("1", "STAY & NEGOTIATE", "Leverage RFP pressure for 10-15% better pricing"),
-        ("2", "MODERNIZE", "Use savings to fund 5G acceleration"),
-        ("3", "STRATEGIC RESERVE", "Maintain diversification option for future"),
-    ]
-)
-
-deck.save("output.pptx")
-```
-
-### 3. Run QA
-
-```bash
-python scripts/qa_ppt_audit.py output.pptx
-```
-
-Must pass with 0 CRITICAL before delivery.
-
----
-
-## Design System Details
-
-### Color Derivation
-
-From 3 brand colors, the system generates:
+### Color: 3 Brand Hues → Auto-derived Palette
 
 ```
-Primary (#00377B):
-  shade_90  = darken 20%     # Deepest tone
-  shade_70  = darken 10%     # Dark-mid
-  shade_50  = lighten 15%    # Mid tone
-  tint_30   = lighten 40%    # Light
-  tint_15   = lighten 60%    # Very light
-  tint_05   = lighten 85%    # Near-white (backgrounds)
-
-Accent (#FFD100):
-  accent_dark = darken 20%   # Muted gold (for secondary data)
-
-Neutrals (always available):
-  white, light_gray (#F5F5F5), mid_gray (#95A5A6),
-  dark_gray (#7F8C8D), charcoal (#2C3E50), black
-```
-
-### Semantic Color Mapping
-
-```python
-# Charts — Stay vs Switch or Positive vs Negative
-positive = brand.secondary   # Bright blue
-negative = brand.shade_90    # Darkest primary
-warning  = brand.accent      # Yellow
-
-# 7-dimension stacked charts — all from brand palette
-dim_colors = [
-    brand.secondary,    # Dimension 1
-    brand.primary,      # Dimension 2
-    brand.shade_50,     # Dimension 3
-    brand.accent,       # Dimension 4
-    brand.shade_70,     # Dimension 5
-    brand.tint_30,      # Dimension 6
-    brand.accent_dark,  # Dimension 7
-]
+Primary → shade_90 / shade_70 / shade_50 / tint_30 / tint_15 / tint_05
+Accent  → accent_dark
+Neutrals: white / light_gray / mid_gray / dark_gray / charcoal / black
 ```
 
 ### Typography
 
 ```
-Slide title:     20pt, Bold, Primary color
-Subtitle:        12pt, Regular, Dark gray
-KPI value:       36pt, Bold, White (on dark bg)
-KPI label:       10pt, Regular, White (on dark bg)
-Body text:       11pt, Regular, Charcoal
-Chart labels:    8pt, Regular
-Table header:    9pt, Bold, White on Primary
-Table body:      9pt, Regular, Charcoal
-Source/footer:   7pt, Regular, Mid gray
+Cover title:     36pt Bold White
+Slide title:     20pt Bold Primary
+Subtitle:        12pt Regular Dark gray
+KPI value:       36pt Bold White (on dark bg)
+Body:            11pt Regular Charcoal
+Chart labels:    8pt Regular
+Table header:    9pt Bold White on Primary
+Source/footer:   7pt Regular Mid gray
 ```
 
-### Slide Templates
+### Chart Types
 
-| Template | Layout | Use When |
-|----------|--------|----------|
-| `cover` | Full dark bg, title + subtitle + date | Opening slide |
-| `section_divider` | Full dark bg, number + title | Between sections |
-| `kpi_row` | Action title + 3-4 KPI boxes + chart | Executive summary |
-| `chart_full` | Action title + chart (60-70%) + insight box | Data story |
-| `chart_table` | Action title + chart left + table right | Dimension breakdown |
-| `deep_dive` | Action title + bar chart + horizontal bars | Per-scenario detail |
-| `risk_matrix` | Action title + 2x2 matrix + legend | Risk assessment |
-| `timeline` | Action title + phase bars + comparison | Timeline analysis |
-| `recommendation` | Action title + 3 numbered action cards | Closing recommendation |
-| `closing` | Full dark bg, "Thank You" | Final slide |
+`bar` | `stacked_bar` | `grouped_bar` | `line` | `area` | `pie` | `donut` | `waterfall` | `bubble` | `scatter`
 
 ---
 
-## QA Audit Checks
-
-The `qa_ppt_audit.py` script checks:
-
-| Check | Severity | Rule |
-|-------|----------|------|
-| Contrast < 2.0:1 | CRITICAL | Text invisible on background |
-| Contrast < 3.0:1 | WARNING | Hard to read |
-| Bare number (no unit) | WARNING | Missing $M, %, months etc. |
-| Non-standard font | INFO | Font != brand font_family |
-| Font size < 7pt | WARNING | Too small to read |
-| Chart labels without units | WARNING | Data labels format check |
-| Empty slide (< 2 shapes) | WARNING | Possibly blank |
-| Missing source/footnote | INFO | Content slide lacks citation |
-
-**Gate**: 0 CRITICAL to pass. WARNINGs reviewed manually.
-
----
-
-## Workflow Integration
-
-### With mckinsey-consultant skill
-This skill handles STEP 7 (PPT generation) and STEP 8 (iteration/QA) of the
-mckinsey-consultant workflow. Use mckinsey-consultant for STEP 1-6 (problem
-definition, issue tree, hypotheses, dummy pages, data collection).
-
-### With elite-powerpoint-designer skill
-This skill incorporates the Financial Elite style from elite-powerpoint-designer
-but enforces stricter color discipline (3-hue max) and adds automated QA.
-
-### Standalone
-Can be used independently for any data-driven presentation where you have
-structured data and want McKinsey-quality output.
-
----
-
-## Requirements
+## REQUIREMENTS
 
 ```bash
 pip install python-pptx
 ```
 
-Optional (for QA audit color analysis):
-```bash
-pip install Pillow
-```
+---
+
+## WORKFLOW INTEGRATION
+
+- **mckinsey-consultant skill**: This skill handles STEP 7-8 (generation + QA)
+- **frontend-slides skill**: Use for HTML preview before PPTX delivery
+- **Standalone**: Full pipeline from one prompt to PPTX
