@@ -307,7 +307,8 @@ TECH_LABEL_RE = re.compile(
     r'\bS[1-9]\b|'          # S1, S2 (scenario labels)
     r'\bH[12]\b|'           # H1, H2 (half-year)
     r'\bLooks?\s*\d[\d\-]*|' # Look 1, Looks 1-4
-    r'\bP[0-3]\b',          # P0, P1, P2 priority labels
+    r'\bP[0-3]\b|'          # P0, P1, P2 priority labels
+    r'\b[A-Z]{1,3}-\d+\b',  # codes like SO-1, ST-2, WO-3
     re.IGNORECASE)
 
 # Count expressions: "N things" where the noun makes the number self-evident
@@ -316,7 +317,7 @@ COUNT_NOUN_RE = re.compile(
     r'opportunit|threat|domain|pillar|task|scenario|quarter|slide|'
     r'market|country|region|band|item|point|member|day|hour|minute)\w*\b|'
     r'\b\d+\s+(?:SWOT|strengths?|weaknesses?|factors?|metrics?|domains?|'
-    r'tasks?|pillars?|priorities?|opportunities)\b|'
+    r'tasks?|pillars?|priorities?|opportunities|high-severity)\b|'
     r'(?:across|over|among|between)\s+\d+\s+\w+',   # "across 4 domains"
     re.IGNORECASE)
 
